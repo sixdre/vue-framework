@@ -10,13 +10,9 @@
 	}
 </script>
 
-<style>
-	body,
-	html {
-		width: 100%;
-		height: 100%;
-	}
-	
+<style lang="less">
+	@import './style/common';
+
 	#app {
 		position: relative;
 		width: 100%;

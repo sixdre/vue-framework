@@ -19,6 +19,6 @@ export default {
     return localStorage.getItem(setting.uid)
   },
   logout () {
-    localStorage.setItem(setting.userToken, '')
+    localStorage.removeItem(setting.userToken)
   }
 }

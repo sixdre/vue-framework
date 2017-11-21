@@ -4,7 +4,7 @@
       <header-component></header-component>
     </el-header>
     <el-container>
-      <el-aside width="200px">
+      <el-aside width="202px">
         <aside-component></aside-component>
       </el-aside>
       <el-main>
@@ -35,7 +35,8 @@ export default {
 }
 
 .el-main {
-  background-color: #E9EEF3;
+  background-color: #fff;
   color: #333;
+  padding: 10px;
 }
 </style>
