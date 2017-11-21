@@ -21,6 +21,53 @@ export default {
     },
     getComments(id) {
         return $http.get('/api/comments/article/' + id );
-
+    },
+    getNavList() {
+        return new Promise((resolve) => {
+            // var data = [
+            //     {
+            //         name: '系统组件',
+            //         child: [
+            //             {
+            //                 name: '文章',
+            //                 path: '/article'
+            //             },
+            //             {
+            //                 name: '文章',
+            //                 child: [
+            //                     {
+            //                         path: '/article/publish',
+            //                         name: '文章发布'
+            //                     },
+            //                     {
+            //                         path: '/article/list',
+            //                         name: '文章列表'
+            //                     }
+            //                 ]
+            //             }
+            //         ]
+            //     }
+            // ]
+             var data = [
+                {
+                    name: '文章',
+                    path: '/article',
+                    child: [
+                        {
+                            path: '/article/publish',
+                            name: '文章发布'
+                        },
+                        {
+                            path: '/article/list',
+                            name: '文章列表'
+                        }
+                    ]
+                }, {
+                    name: '文章2',
+                    path: '/article',
+                }
+            ]
+            resolve(data)
+        })
     }
 }

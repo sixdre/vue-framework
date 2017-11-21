@@ -10,13 +10,13 @@ import articleList from '@/views/article/list'
 
 const asyncRouter = [
     {
-        path: '/asyncRouter',
+        path: '/asyncRouter',       //这个用作动态路由的父页
         component: r => require.ensure([], () => r(require('@/layouts/layout')), 'layout'),
         children: []
     },
     {
         path: '/article',
-     
+        redirect: '/article/publish',
         meta:{
             permission:[]
         },
@@ -24,10 +24,16 @@ const asyncRouter = [
     },
     {
         path: '/article/publish',
+        meta:{
+            permission:[]
+        },
         component: r => require.ensure([], () => r(require('@/views/article/publish')), 'article'),
     },
     {
         path: '/article/list',
+        meta:{
+            permission:[]
+        },
         component: r => require.ensure([], () => r(require('@/views/article/list')), 'article'),
     },
     
