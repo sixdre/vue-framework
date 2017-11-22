@@ -4,9 +4,10 @@
 			<el-submenu index="3" v-if="item.child&&item.child.length>0">
 				<template slot="title"> <i class="el-icon-message"></i>{{item.name}} </template>
 				<template v-for="(child,index) in item.child" >
-					<el-menu-item :index="child.path" :key="index">{{child.name}}</el-menu-item>
+					<el-menu-item v-if="!child.hidden" :index="child.path" :key="index">{{child.name}}</el-menu-item>
         		</template>
 			</el-submenu>
+			
 			<el-menu-item v-else :index="item.path" >
 				<i class="el-icon-menu"></i>
 				<span slot="title">{{item.name}}</span>

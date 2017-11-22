@@ -11,32 +11,9 @@ import index from '@/views/main'
 import article from '@/views/article/publish'
 import articleList from '@/views/article/list'
 import login from '@/views/login'
-Vue.use(Router)
+import permission from '@/views/permission/permission'
 
-const navList = [
-	{
-		name: '系统组件',
-		child: [
-			{
-				name: '文章',
-				path: '/article'
-			},
-			{
-				name: '文章',
-				child: [
-					{
-						path: '/article/publish',
-						name: '文章发布'
-					},
-					{
-						path: '/article/list',
-						name: '文章列表'
-					}
-				]
-			}
-		]
-	}
-]
+Vue.use(Router)
 
 /**
  * 根据权限匹配路由
@@ -98,10 +75,10 @@ var routes = [{
 	name: 'index',
 	redirect: '/article/publish',
 	component: index
-}, {
+},{
 	path: '/login',
 	name: 'login',
-	component: login,
+	component: login
 }]
 
 
@@ -130,9 +107,6 @@ router.beforeEach((to, from, next) => {
 	} else {
 		
 	}
-	
-	
-
     next() 
 })
 

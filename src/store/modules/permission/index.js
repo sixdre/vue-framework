@@ -25,9 +25,10 @@ const actions = {
         return new Promise((resolve, reject) =>{
             let uid = rootState.uid
             Api.getNavList().then((res) => {
+                console.log(res.data.data)
                 // 存储权限列表
-                commit('setList', res)
-                resolve(res)
+                commit('setList', res.data.data)
+                resolve(res.data.data)
             }).catch(() => {
                 reject()
             })

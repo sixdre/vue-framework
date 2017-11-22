@@ -1,7 +1,7 @@
 <template>
 	<section class="section">
 		<div class="section_breadcrumb">
-			<strong class="title">列表</strong>
+			<strong class="title" v-if="hasPermission('edit')">列表</strong>
 		</div>
 		<div class="search_toolbar">
 			<el-form :inline="true" :model="searchForm" class="demo-form-inline">

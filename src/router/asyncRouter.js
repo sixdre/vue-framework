@@ -2,12 +2,6 @@
 // 获取权限后和该表匹配的则被加入到正式路由中。该表必须完整的包含工程页面
 // path 页面跳转地址
 // permission字段内容从后台获取，代表该页内部详细权限，以key:value形式存储
-import layout from '@/layouts/layout'
-
-import index from '@/views/main'
-import article from '@/views/article/publish'
-import articleList from '@/views/article/list'
-
 const asyncRouter = [
     {
         path: '/asyncRouter',       //这个用作动态路由的父页
@@ -36,6 +30,14 @@ const asyncRouter = [
         },
         component: r => require.ensure([], () => r(require('@/views/article/list')), 'article'),
     },
+    {
+		path: '/permission',
+        name: 'permission',
+        meta:{
+            permission:[]
+        },
+		component: r => require.ensure([], () => r(require('@/views/permission/permission')), 'permission'),
+	}
     
 ]
 
