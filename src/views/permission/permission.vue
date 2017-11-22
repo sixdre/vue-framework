@@ -5,6 +5,7 @@
              node-key="id" ref="tree"
              @check-change="nodeClick"
              @current-change="nodeChange"
+             :props="defaultProps"
               :check-strictly="false" highlight-current>
         </el-tree>
         <div class="buttons">
@@ -39,18 +40,29 @@ export default {
                     label: '文章列表',
                     path: '/article/publish',
                 }]
-            }]
+            }],
+             defaultProps: {
+                children: 'child',
+                label: 'name'
+            }
         }
     },
+    created(){
+        this.getNavList()
+    },
     methods: {
+        async getNavList(){
+            let res = await this.$Api.getNavList();
+            this.data2 = res.data.data;
+        },
         nodeClick(a1,a2,a3){
-            console.log(a1.$treeNodeId)
-            console.log(a2)
-            console.log(a3)
+            // console.log(a1.$treeNodeId)
+            // console.log(a2)
+            // console.log(a3)
            
         },
         nodeChange(da,node){
-            console.log(node)
+            // console.log(node)
         },
         getCheckedNodes() {
             console.log(this.$refs.tree.getCheckedNodes());
