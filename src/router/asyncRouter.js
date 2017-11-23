@@ -14,7 +14,7 @@ const asyncRouter = [
         meta:{
             permission:[]
         },
-        component: r => require.ensure([], () => r(require('@/layouts/layout')), 'article'),
+        component: r => require.ensure([], () => r(require('@/layouts/empty')), 'article'),
     },
     {
         path: '/article/publish',

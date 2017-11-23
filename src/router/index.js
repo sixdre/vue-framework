@@ -73,8 +73,7 @@ function routerMatch(permission, asyncRouter) {
 var routes = [{
 	path: '/',
 	name: 'index',
-	redirect: '/article/publish',
-	component: index
+	component: layout
 },{
 	path: '/login',
 	name: 'login',

@@ -1,18 +1,27 @@
 <template>
 	<div class='menu-wrapper'>
-		<div v-for="(item,index) in navList" :key="index">
-			<el-submenu index="3" v-if="item.child&&item.child.length>0">
-				<template slot="title"> <i class="el-icon-message"></i>{{item.name}} </template>
-				<template v-for="(child,index) in item.child" >
-					<el-menu-item v-if="!child.hidden" :index="child.path" :key="index">{{child.name}}</el-menu-item>
-        		</template>
+		<div v-for="(item,index) in routes" :key="index">
+
+			<el-submenu :index="item.name" v-if="item.child&&item.child.length>0">
+				<template slot="title"><i v-if='item.icon' :class="item.icon"></i>{{item.name}} </template>
+				<div v-for="(child,index) in item.child" :key="index" v-if='!child.hidden'>
+					<nav-item class='nest-menu' v-if='child.child&&child.child.length>0'  :routes='[child]'> </nav-item>
+					<router-link v-else :to="child.path">
+						<el-menu-item :index="child.path">
+							<template slot="title"><i v-if='child.icon' :class="child.icon"></i>{{child.name}} </template>
+						</el-menu-item>
+					</router-link>
+        		</div>
 			</el-submenu>
-			
-			<el-menu-item v-else :index="item.path" >
-				<i class="el-icon-menu"></i>
-				<span slot="title">{{item.name}}</span>
-			</el-menu-item>
-			
+
+
+
+			<router-link v-else :to="item.path">
+				<el-menu-item :index="item.path">
+					<template slot="title"><i v-if='item.icon' :class="item.icon"></i>{{item.name}} </template>
+				</el-menu-item>
+			</router-link>
+
 		</div>
 		<!-- <el-submenu index="3">
 			<template slot="title"> <i class="el-icon-message"></i>导航 </template>
@@ -27,18 +36,13 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+
 export default {
-	data() {
-		return {
-		
+	name: 'navItem',
+	props: {
+		routes: {
+			type: Array
 		}
-	},
-	computed: {
-		// 使用对象展开运算符将 getter 混入 computed 对象中
-		...mapGetters([
-			'navList'
-		])
 	}
 }
 </script>

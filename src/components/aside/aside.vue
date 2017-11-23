@@ -1,17 +1,21 @@
 <template>
-	<el-menu :router="true"  background-color="#545c64"  text-color="#fff"
-	        active-text-color="#ffd04b"
-	        style="height: 100%;" mode="vertical" 
-	        :default-active="$route.path">
-	    <nav-item></nav-item>
+	<el-menu :router="true" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" style="height: 100%;" mode="vertical" :default-active="$route.path">
+		<nav-item :routes="navList"></nav-item>
 	</el-menu>
 </template>
 
 <script>
-	import navItem from './navItem.vue'
-	export default {
-  		components: { navItem },
+import { mapGetters } from 'vuex';
+import navItem from './navItem.vue'
+export default {
+	components: { navItem },
+	computed: {
+		// 使用对象展开运算符将 getter 混入 computed 对象中
+		...mapGetters([
+			'navList'
+		])
 	}
+}
 </script>
 
 <style scoped>
