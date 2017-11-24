@@ -1,5 +1,13 @@
 <template>
-    <div>
+    <div >
+
+        <el-form ref="permissionForm" :model="permissionForm" label-width="80px">
+            <el-form-item label="角色名称">
+                <el-input v-model="permissionForm.role" style="width:300px"></el-input>
+            </el-form-item>
+        </el-form>
+
+        <p>分配权限</p>
         <el-tree :data="pathList"
             show-checkbox default-expand-all 
             node-key="id" ref="tree"
@@ -8,13 +16,15 @@
 
             :check-strictly="false" highlight-current>
         </el-tree>
+
+
         <div class="buttons">
-            <el-button @click="getCheckedNodes">通过 node 获取</el-button>
-            <el-button @click="getCheckedKeys">通过 key 获取</el-button>
+            <el-button @click="getCheckedKeys">提交</el-button>
+            <!-- <el-button @click="getCheckedKeys">通过 key 获取</el-button> -->
         </div> 
       
         <div style="margin-top:20px;">
-            <p>已选择的path ID： {{selectPaths}}</p>
+            <p>已选择的path ID： {{permissionForm.menuIds}}</p>
         </div>
         
     </div>
@@ -28,6 +38,10 @@
 export default {
     data() {
         return {
+            permissionForm:{
+                role:'',
+                menuIds:'',
+            },
             pathList: [],
             defaultProps: {
                 children: 'child',
@@ -51,7 +65,7 @@ export default {
             console.log(this.$refs.tree.getCheckedNodes());
         },
         getCheckedKeys() {
-           this.selectPaths = this.$refs.tree.getCheckedKeys();
+           this.permissionForm.menuIds = this.$refs.tree.getCheckedKeys().join(',');
         },
        
     }

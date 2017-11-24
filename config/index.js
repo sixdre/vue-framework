@@ -29,7 +29,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {			//跨域代理
     	'/api': {
-		    target: 'http://192.168.10.26:7893',
+		    target: 'http://192.168.10.26:3000',
 		    changeOrigin: true
 	  	}
     },

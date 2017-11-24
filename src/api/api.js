@@ -22,9 +22,12 @@ export default {
     getComments(id) {
         return $http.get('/api/comments/article/' + id );
     },
+    createPermission(data) {
+        return $http.post('/permission',data);
+    },
     getNavList() {
 
-        return $http.get('/api/perpath');
+        return $http.get('/permission/menus');
 
         // return new Promise((resolve) => {
         //      var data = [
