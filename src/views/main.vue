@@ -1,6 +1,6 @@
 <template>
 	<div>
-		index
+		<el-switch></el-switch>
 	</div>
 </template>
 

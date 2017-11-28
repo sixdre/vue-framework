@@ -3,7 +3,7 @@
 
         <el-form ref="permissionForm" :model="permissionForm" label-width="80px">
             <el-form-item label="角色名称">
-                <el-input v-model="permissionForm.role" style="width:300px"></el-input>
+                <el-input v-model="permissionForm.roleName" style="width:300px"></el-input>
             </el-form-item>
         </el-form>
 
@@ -19,7 +19,7 @@
 
 
         <div class="buttons">
-            <el-button @click="getCheckedKeys">提交</el-button>
+            <el-button @click="createPermission">提交</el-button>
             <!-- <el-button @click="getCheckedKeys">通过 key 获取</el-button> -->
         </div> 
       
@@ -39,7 +39,7 @@ export default {
     data() {
         return {
             permissionForm:{
-                role:'',
+                roleName:'',
                 menuIds:'',
             },
             pathList: [],
@@ -67,6 +67,11 @@ export default {
         getCheckedKeys() {
            this.permissionForm.menuIds = this.$refs.tree.getCheckedKeys().join(',');
         },
+        async createPermission(){
+             let res = await this.$Api.createPermission(this.permissionForm)
+
+             console.log(res)
+        }
        
     }
 };
