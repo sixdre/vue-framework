@@ -39,8 +39,8 @@ export default {
     data() {
         return {
             permissionForm:{
-                roleName:'',
-                menuIds:'',
+                roleName:'12334',
+                menuIds:'1,2,3',
             },
             pathList: [],
             defaultProps: {
@@ -69,8 +69,9 @@ export default {
         },
         async createPermission(){
              let res = await this.$Api.createPermission(this.permissionForm)
-
-             console.log(res)
+             let data = res.data.data;
+            // this.$store.commit('permission/setList', data)
+             console.log(res.data.data)
         }
        
     }

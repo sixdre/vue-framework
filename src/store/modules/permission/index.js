@@ -20,7 +20,7 @@ const mutations = {
 }
 
 const actions = {
-    // 获取权限列表
+    //从请求里面 获取权限列表
     getPermission({commit, rootState}){
         return new Promise((resolve, reject) =>{
             let uid = rootState.uid

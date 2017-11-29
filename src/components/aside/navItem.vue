@@ -14,14 +14,11 @@
         		</div>
 			</el-submenu>
 
-
-
 			<router-link v-else :to="item.path">
 				<el-menu-item :index="item.path">
 					<template slot="title"><i v-if='item.icon' :class="item.icon"></i>{{item.name}} </template>
 				</el-menu-item>
 			</router-link>
-
 		</div>
 		<!-- <el-submenu index="3">
 			<template slot="title"> <i class="el-icon-message"></i>导航 </template>
