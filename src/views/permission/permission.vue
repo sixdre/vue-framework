@@ -7,26 +7,68 @@
             </el-form-item>
         </el-form>
 
-        <p>分配权限</p>
+
+        <!-- <table class="el-table">
+             <thead>
+                <tr>
+                    <th>#</th>
+                     <th>菜单名称</th>
+                     <th>url</th>
+                     <th>操作</th>
+                 </tr>
+             </thead>
+             <tbody>
+                 <tr v-for="(item,index) in pathList" :key="index">
+                     <td><el-checkbox v-model="item.checked" :label="item.id" @change="selectMenu(item,index)"></el-checkbox></td>
+                     <td>{{item.name}}</td>
+                     <td>{{item.path}}</td>
+                     <td>
+                        <el-checkbox >添加</el-checkbox>
+                        <el-checkbox >修改</el-checkbox>
+                        <el-checkbox >删除</el-checkbox>
+                     </td>
+                 </tr>
+             </tbody>
+        </table>
+
+        <el-button @click="createPermission">提交</el-button> -->
+
+
+        <!-- <p>分配权限</p>
         <el-tree :data="pathList"
             show-checkbox default-expand-all 
             node-key="id" ref="tree"
-
             :props="defaultProps"
-
-            :check-strictly="false" highlight-current>
+            :check-strictly="false" highlight-current
+            :render-content="renderContent">
         </el-tree>
 
 
         <div class="buttons">
             <el-button @click="createPermission">提交</el-button>
-            <!-- <el-button @click="getCheckedKeys">通过 key 获取</el-button> -->
         </div> 
       
         <div style="margin-top:20px;">
             <p>已选择的path ID： {{permissionForm.menuIds}}</p>
         </div>
         
+
+        <el-dialog
+        title="分配权限"
+        :visible.sync="dialogVisible"
+        width="36%">
+            <el-transfer v-model="value1" :data="data"></el-transfer>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="disPermission">确 定</el-button>
+            </span>
+        </el-dialog> -->
+
+
+
+
+
+
     </div>
 </template>
 
@@ -37,12 +79,28 @@
 
 export default {
     data() {
+        const generateData = _ => {
+            return [{
+                key: 1,
+                label: '修改',
+            },{
+                key: 2,
+                label: '删除',
+            },{
+                key: 3,
+                label: '更新',
+            }];
+        };
         return {
+            data: generateData(),
+            value1: [],
+            dialogVisible:false,
             permissionForm:{
                 roleName:'12334',
                 menuIds:'1,2,3',
             },
             pathList: [],
+            selectMenus:[],
             defaultProps: {
                 children: 'child',
                 label: 'name'
@@ -56,6 +114,20 @@ export default {
 
     },
     methods: {
+        //分配权限
+        disPermission(){
+
+        },
+        selectMenu(item,index){
+            console.log(item.checked)
+            if(item.checked){
+                this.selectMenus.push(item);
+            }else{
+                 this.selectMenus.splice(index,1);
+            }
+
+            console.log(this.selectMenus)
+        },
         async getNavList(){
             let res = await this.$Api.getNavList();
             this.pathList = res.data.data;
@@ -68,10 +140,43 @@ export default {
            this.permissionForm.menuIds = this.$refs.tree.getCheckedKeys().join(',');
         },
         async createPermission(){
-             let res = await this.$Api.createPermission(this.permissionForm)
-             let data = res.data.data;
-            // this.$store.commit('permission/setList', data)
-             console.log(res.data.data)
+            console.log(this.selectPathIds)
+            //  let res = await this.$Api.createPermission(this.permissionForm)
+            //  let data = res.data.data;
+            // // this.$store.commit('permission/setList', data)
+            //  console.log(res.data.data)
+        },
+        renderContent(h, { node, data, store }) {
+            return h('span',[
+                h('span',node.label),
+                h('el-checkbox',{attrs:{'v-model':"checked"},on:{
+                    change:function(){
+                        console.log(store)
+                    }
+                }},'新增'),
+                 h('el-checkbox',{attrs:{value:2},on:{
+                    change:function(){
+                        alert()
+                    }
+                }},'修改'),
+                 h('el-checkbox',{attrs:{value:3},on:{
+                    change:function(){
+                        alert()
+                    }
+                }},'删除')
+            ])
+            
+            
+            // `
+            //     <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
+            //         <span>
+            //         <span>{node.label}</span>
+            //         </span>
+            //         <span>
+            //         <el-button style="font-size: 12px;" type="text" on-click={ () => this.append(data) }>Append</el-button>
+            //         <el-button style="font-size: 12px;" type="text" on-click={ () => this.remove(node, data) }>Delete</el-button>
+            //         </span>
+            //     </span>)`
         }
        
     }
@@ -79,5 +184,7 @@ export default {
 </script>
 
 <style lang="less">
-
+.el-transfer-panel__body {
+    height:100px;
+}
 </style>
