@@ -20,10 +20,13 @@ export default {
         return $http.get('/api/categories', { params: { skip: skip, limit: limit } });
     },
     getComments(id) {
-        return $http.get('/api/comments/article/' + id );
+        return $http.get('/api/comments/article/' + id);
+    },
+    getPermission() {
+        return $http.get('/permission');
     },
     createPermission(data) {
-        return $http.post('/permission',data);
+        return $http.post('/permission', data);
     },
     getNavList() {
 

@@ -148,6 +148,12 @@ export default {
            //this.permissionForm.menuIds = this.$refs.tree.getCheckedKeys().join(',');
         },
         async createPermission(){
+            let res = await this.$Api.getPermission()
+            let data = res.data.data;
+            this.$store.commit('permission/setList', data)
+
+
+
             console.log(this.selectPathIds)
             //  let res = await this.$Api.createPermission(this.permissionForm)
             //  let data = res.data.data;

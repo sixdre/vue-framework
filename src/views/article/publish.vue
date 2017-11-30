@@ -1,7 +1,7 @@
 <template>
 	<section class="section">
 		<div class="section_breadcrumb">
-			<strong class="title" v-if="hasPermission('edit')">列表</strong>
+			<strong class="title">列表</strong>
 		</div>
 		<div class="search_toolbar">
 			<el-form :inline="true" :model="searchForm" class="demo-form-inline">
@@ -38,7 +38,7 @@
 				</el-table-column>
 				<el-table-column label="操作" width="150">
 					<template slot-scope="scope">
-						<el-button size="small" @click="handleEditDialog(scope.row)">编辑</el-button>
+						<el-button size="small" v-if="hasPermission('edit')" @click="handleEditDialog(scope.row)">编辑</el-button>
 						<el-button type="danger" size="small" @click="handleDel(scope.row.id)">删除</el-button>
 					</template>
 				</el-table-column>
