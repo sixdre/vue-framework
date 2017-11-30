@@ -6,7 +6,13 @@ const asyncRouter = [
     {
         path: '/asyncRouter',       //这个用作动态路由的父页
         component: r => require.ensure([], () => r(require('@/layouts/layout')), 'layout'),
-        children: []
+        children: [
+            // {
+            //     path: '/404',
+            //     name: '404',
+            //     component: r => require.ensure([], () => r(require('@/views/auth/404')), '404'),
+            // }
+        ]
     },
     {
         path: '/article',
@@ -37,7 +43,7 @@ const asyncRouter = [
             permission:[]
         },
 		component: r => require.ensure([], () => r(require('@/views/permission/permission')), 'permission'),
-	}
+    }
     
 ]
 

@@ -1,19 +1,16 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '@/store'
-
+import Auth from '@/services/auth'
 import asyncRouter from './asyncRouter'
 
-import emptyPage from '@/layouts/empty'
-import layout from '@/layouts/layout'
-
-import index from '@/views/main'
-import article from '@/views/article/publish'
-import articleList from '@/views/article/list'
-import login from '@/views/login'
-import permission from '@/views/permission/permission'
-
 Vue.use(Router)
+
+//路由白名单（用于不需要验证的路由）
+const whiteList = [
+    '/login',
+    '/register'
+]
 
 /**
  * 根据权限匹配路由
@@ -27,7 +24,6 @@ function routerMatch(permission, asyncRouter) {
 		// 创建路由
 		function createRouter(permission) {
 			permission.forEach((item) => {
-				//console.log(item)
 				if (item.child && item.child.length) {
 					// 递归
 					createRouter(item.child)
@@ -50,36 +46,20 @@ function routerMatch(permission, asyncRouter) {
 }
 
 
-// {
-// 	path: '/article',
-// 	name: 'article',
-// 	redirect: '/article/publish',
-// 	component: layout,
-// 	children: [
-// 		{
-// 			path: 'publish',
-// 			name: '发布文章',
-// 			component: article,
-// 		},
-// 		{
-// 			path: 'list',
-// 			name: '文章列表',
-// 			component: articleList,
-// 		},
-// 	]
-// }
-
-
+//初始化的路由
 var routes = [{
 	path: '/',
 	name: 'index',
-	component: layout
+	component:  r => require.ensure([], () => r(require('@/layouts/layout')))
 },{
 	path: '/login',
 	name: 'login',
-	component: login
+	component:  r => require.ensure([], () => r(require('@/views/login')))
+},{
+	path: '/404',
+	name: 'notFound',
+	component: r => require.ensure([], () => r(require('@/views/auth/404')))
 }]
-
 
 
 
@@ -88,25 +68,44 @@ const router = new Router({
 	routes: routes
 })
 
-	
-router.beforeEach((to, from, next) => {
-	if (store.state.permission.list.length === 0) {
-		store.dispatch('permission/getPermission').then(res => {
-			// 匹配并生成需要添加的路由对象
-			routerMatch(res, asyncRouter).then(data => {
-				router.addRoutes(data)
-			})
-		}).catch(() => {
-			// console.log('登录错误')
-			// store.dispatch('user/logout').then(() => {
-			// 	router.replace('/login')
-			// })
-		})
 
+//假的
+Auth.login('11111')
+
+router.beforeEach((to, from, next) => {
+	if (!Auth.getToken()) {		//token 失效
+		if (whiteList.indexOf(to.path) >= 0) {
+            next()
+        } else {
+            router.replace('/login')
+        }
 	} else {
-		
+		if (store.state.permission.list.length === 0) {			//页面刷新需要重新请求
+			store.dispatch('permission/getPermission').then(res => {
+				// 匹配并生成需要添加的路由对象
+				routerMatch(res, asyncRouter).then(data => {
+					router.addRoutes(data)
+					next(to.path);
+				})
+			}).catch(() => {
+				// console.log('登录错误')
+				// store.dispatch('user/logout').then(() => {
+				// 	router.replace('/login')
+				// })
+			})
+		} else {
+			if(to.matched.length){
+				// if(whiteList.indexOf(to.path) < 0){
+				// 	// store.dispatch('user/actionlog', to)
+				// }
+				next()
+			} else{
+				router.replace('/404')
+			}
+		}	
+
 	}
-    next() 
+
 })
 
 

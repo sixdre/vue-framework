@@ -34,14 +34,20 @@
         <el-button @click="createPermission">提交</el-button> -->
 
 
-        <!-- <p>分配权限</p>
-        <el-tree :data="pathList"
-            show-checkbox default-expand-all 
-            node-key="id" ref="tree"
-            :props="defaultProps"
-            :check-strictly="false" highlight-current
-            :render-content="renderContent">
-        </el-tree>
+        <el-card style="width:400px;">
+            <div slot="header" class="clearfix">
+                <span>权限分配</span>
+                <el-button style="float: right; padding: 3px 0" type="text" @click="getCheckedKeys">分配权限</el-button>
+            </div>
+            <el-tree :data="pathList"
+                show-checkbox default-expand-all 
+                node-key="id" ref="tree"
+                :props="defaultProps"
+                :check-strictly="false" highlight-current
+                >
+            </el-tree>
+        </el-card>
+        
 
 
         <div class="buttons">
@@ -52,7 +58,7 @@
             <p>已选择的path ID： {{permissionForm.menuIds}}</p>
         </div>
         
-
+         <!--
         <el-dialog
         title="分配权限"
         :visible.sync="dialogVisible"
@@ -137,7 +143,9 @@ export default {
             console.log(this.$refs.tree.getCheckedNodes());
         },
         getCheckedKeys() {
-           this.permissionForm.menuIds = this.$refs.tree.getCheckedKeys().join(',');
+            alert(this.$refs.tree.getCheckedKeys())
+
+           //this.permissionForm.menuIds = this.$refs.tree.getCheckedKeys().join(',');
         },
         async createPermission(){
             console.log(this.selectPathIds)
