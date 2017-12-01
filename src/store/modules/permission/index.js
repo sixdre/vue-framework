@@ -27,7 +27,6 @@ const actions = {
             // let uid = rootState.uid
             let roleId = Auth.getRole();
             Api.getPermission(roleId).then((res) => {
-                console.log(res.data.data)
                 // 存储权限列表
                 commit('setList', res.data.data)
                 resolve(res.data.data)

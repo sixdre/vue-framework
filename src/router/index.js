@@ -39,7 +39,10 @@ function routerMatch(permission, asyncRouter) {
                 })
             })
         }
-
+        if (!permission || !permission.length) {
+            resolve([]);
+            return;
+        }
         createRouter(permission)
         resolve([routers])
     })
@@ -79,12 +82,17 @@ router.beforeEach((to, from, next) => {
             router.replace('/login')
         }
     } else {
+        console.log(store.state.permission.list)
         if (store.state.permission.list.length === 0) { //页面刷新需要重新请求
             store.dispatch('permission/getPermission').then(res => {
                 // 匹配并生成需要添加的路由对象
                 routerMatch(res, asyncRouter).then(data => {
-                    router.addRoutes(data)
-                    next(to.path);
+                    if (!data || !data.length) {
+                        next()
+                    } else {
+                        router.addRoutes(data)
+                        next(to.path);
+                    }
                 })
             }).catch(() => {
                 // console.log('登录错误')

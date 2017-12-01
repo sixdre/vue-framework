@@ -13,9 +13,13 @@ export default {
     createPermission(data) {
         return $http.post('/permission', data);
     },
-    getNavList() {
+    //创建角色
+    createRole(name) {
+         return $http.post('/permission/role', {name});
+    },
+    getMenuList() {
 
-        return $http.get('/permission/menus');
+        return $http.get('/permission/menus/menus');
 
         // return new Promise((resolve) => {
         //      var data = [

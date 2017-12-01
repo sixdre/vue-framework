@@ -1,38 +1,12 @@
 <template>
     <div >
 
-        <el-form ref="permissionForm" :model="permissionForm" label-width="80px">
+        <el-form ref="permissionForm" label-width="80px">
             <el-form-item label="角色名称">
-                <el-input v-model="permissionForm.roleName" style="width:300px"></el-input>
+                <el-input v-model="roleName" style="width:300px"></el-input>
             </el-form-item>
+            <el-button @click="createRole">提交</el-button> -->
         </el-form>
-
-
-        <!-- <table class="el-table">
-             <thead>
-                <tr>
-                    <th>#</th>
-                     <th>菜单名称</th>
-                     <th>url</th>
-                     <th>操作</th>
-                 </tr>
-             </thead>
-             <tbody>
-                 <tr v-for="(item,index) in pathList" :key="index">
-                     <td><el-checkbox v-model="item.checked" :label="item.id" @change="selectMenu(item,index)"></el-checkbox></td>
-                     <td>{{item.name}}</td>
-                     <td>{{item.path}}</td>
-                     <td>
-                        <el-checkbox >添加</el-checkbox>
-                        <el-checkbox >修改</el-checkbox>
-                        <el-checkbox >删除</el-checkbox>
-                     </td>
-                 </tr>
-             </tbody>
-        </table>
-
-        <el-button @click="createPermission">提交</el-button> -->
-
 
         <el-card style="width:400px;">
             <div slot="header" class="clearfix">
@@ -101,6 +75,7 @@ export default {
             data: generateData(),
             value1: [],
             dialogVisible:false,
+            roleName:null,
             permissionForm:{
                 roleName:'12334',
                 menuIds:'1,2,3',
@@ -124,6 +99,20 @@ export default {
         disPermission(){
 
         },
+        //创建角色
+        async createRole(){
+            let res = await this.$Api.createRole(this.roleName);
+            if(res.data.code===1){
+                this.$message({
+                    showClose: true,
+                    message: res.data.msg,
+                    type: 'success'
+                });
+            }else{
+                this.$message.error(res.data.msg);
+            }
+            
+        },
         selectMenu(item,index){
             console.log(item.checked)
             if(item.checked){
@@ -134,10 +123,10 @@ export default {
 
             console.log(this.selectMenus)
         },
-        async getNavList(){
-            let res = await this.$Api.getNavList();
+        //获取所有的菜单
+        async getMenuList(){
+            let res = await this.$Api.getMenuList();
             this.pathList = res.data.data;
-            console.log(this.pathList)
         },
         getCheckedNodes() {
             console.log(this.$refs.tree.getCheckedNodes());
@@ -151,10 +140,6 @@ export default {
             let res = await this.$Api.getPermission()
             let data = res.data.data;
             this.$store.commit('permission/setList', data)
-
-
-
-            console.log(this.selectPathIds)
             //  let res = await this.$Api.createPermission(this.permissionForm)
             //  let data = res.data.data;
             // // this.$store.commit('permission/setList', data)

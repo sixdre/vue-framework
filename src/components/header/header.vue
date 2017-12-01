@@ -2,7 +2,7 @@
     <div class="app-header">
         这是头部
         当前用户角色ID:{{role}}
-        <el-button type="text">退出</el-button>
+        <el-button type="text" @click="logout()">退出</el-button>
     </div>
 </template>
 
@@ -14,7 +14,21 @@ export default {
 		...mapGetters([
 			'role'
 		])
-	}
+    },
+    methods:{
+        logout(){
+            this.$confirm('确定退出吗?', '提示', {
+				type: 'warning'
+			}).then(() => {
+				this.$store.dispatch('user/logout').then(()=>{
+                    this.$router.push('login')
+                })
+			}).catch(() => {
+
+			});
+            
+        }
+    }
 }
 </script>
 
