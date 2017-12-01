@@ -16,7 +16,7 @@
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" icon="el-icon-search" size="small" @click="onSearch">查询</el-button>
-					<el-button type="primary" size="small" @click="handleAddDialog">新增</el-button>
+					<el-button type="primary" size="small" v-if="hasPermission('add')" @click="handleAddDialog">新增</el-button>
 				</el-form-item>
 			</el-form>
 		</div>
@@ -39,7 +39,7 @@
 				<el-table-column label="操作" width="150">
 					<template slot-scope="scope">
 						<el-button size="small" v-if="hasPermission('edit')" @click="handleEditDialog(scope.row)">编辑</el-button>
-						<el-button type="danger" size="small" @click="handleDel(scope.row.id)">删除</el-button>
+						<el-button type="danger" v-if="hasPermission('remove')" size="small" @click="handleDel(scope.row.id)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>

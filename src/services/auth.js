@@ -4,6 +4,12 @@ export default {
   login (data) {
     localStorage.setItem(setting.userToken, data)
   },
+  setRole(data) {
+    localStorage.setItem('role', data)
+  },
+  getRole() {
+    return localStorage.getItem('role')
+  },
   authenticated () {
     var t = localStorage.getItem(setting.userToken)
     return t && t.length > 0

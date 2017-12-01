@@ -10,7 +10,7 @@ const state = {
     // token
     token: '',
     // 角色分组
-    role: ''
+    role: Auth.getRole()
     // 头像
     // avatar: ''
 }
@@ -27,20 +27,20 @@ const mutations = {
         state.token = data
     },
     setRole: (state, data) => {
+        Auth.setRole(data);
         state.role = data
     }
 }
 
 const actions = {
     // 登出
-    // logout({commit}) {
-    //     return new Promise((resolve) => {
-    //         commit('setUID', '')
-    //         commit('setName', '')
-    //         commit('setToken', '')
-    //         resolve()
-    //     })
-    // }
+    logout({commit}) {
+        return new Promise((resolve) => {
+            commit('setToken', '')
+            commit('setRole', '')
+            resolve()
+        })
+    }
 }
 
 export default {

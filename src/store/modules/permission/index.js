@@ -1,4 +1,5 @@
 import Api from '@/api/api'
+import Auth from '@/services/auth'
 // import { Message } from 'element-ui';
 
 const state = {
@@ -23,8 +24,9 @@ const actions = {
     //从请求里面 获取权限列表
     getPermission({commit, rootState}){
         return new Promise((resolve, reject) =>{
-            let uid = rootState.uid
-            Api.getNavList().then((res) => {
+            // let uid = rootState.uid
+            let roleId = Auth.getRole();
+            Api.getPermission(roleId).then((res) => {
                 console.log(res.data.data)
                 // 存储权限列表
                 commit('setList', res.data.data)

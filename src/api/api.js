@@ -1,29 +1,14 @@
 import $http from '@/services/http'
 
 export default {
-    /**
-     * 获取文章列表
+   /**
+     * 登录
      */
-    getArticleList(page = 1, limit = 5) {
-        return $http.get('/api/articles', { params: { currentPage: page, limit: limit } });
+    login(username,password) {
+        return $http.post('/api/login',{username:username,password:password});
     },
-    /**
-     * 获取文章详情
-     */
-    getArticle(id) {
-        return $http.get('/api/articles/' + id);
-    },
-    /**
-     * 获取分类列表
-     */
-    getCategories(skip = 0, limit = 7) {
-        return $http.get('/api/categories', { params: { skip: skip, limit: limit } });
-    },
-    getComments(id) {
-        return $http.get('/api/comments/article/' + id);
-    },
-    getPermission() {
-        return $http.get('/permission');
+    getPermission(roleId) {
+        return $http.get('/permission/'+roleId);
     },
     createPermission(data) {
         return $http.post('/permission', data);

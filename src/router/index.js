@@ -69,11 +69,10 @@ const router = new Router({
 })
 
 
-//假的
-Auth.login('11111')
+
 
 router.beforeEach((to, from, next) => {
-    if (!Auth.getToken()) { //token 失效
+    if (!Auth.getToken()||!Auth.getRole()) { //token 失效
         if (whiteList.indexOf(to.path) >= 0) {
             next()
         } else {
