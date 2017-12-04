@@ -1,14 +1,14 @@
 <template>
     <div >
 
-        <el-form ref="permissionForm" label-width="80px">
+        <!-- <el-form ref="permissionForm" label-width="80px">
             <el-form-item label="角色名称">
                 <el-input v-model="roleName" style="width:300px"></el-input>
             </el-form-item>
             <el-button @click="createRole">提交</el-button>
-        </el-form>
+        </el-form> -->
 
-        <el-card style="width:400px;">
+        <!-- <el-card style="width:400px;">
             <div slot="header" class="clearfix">
                 <span>权限分配</span>
                 <el-button style="float: right; padding: 3px 0" type="text" @click="getCheckedKeys">分配权限</el-button>
@@ -20,7 +20,7 @@
                 :check-strictly="false" highlight-current
                 >
             </el-tree>
-        </el-card>
+        </el-card> -->
         
 
         <!-- <table class="table">
@@ -47,10 +47,7 @@
         </table> -->
 
         <div>
-            <p><span>栏目名称</span><span>编辑</span><span>删除</span><span>修改</span></p>
-            <div v-for="(item,index) in pathList" :key="index">
-               <per :menu="item"></per>
-            </div>
+           <per :menus="pathList"></per>
         </div>
 
 
@@ -58,9 +55,9 @@
 
 
 
-        <div class="buttons">
+        <!-- <div class="buttons">
             <el-button @click="createPermission">提交</el-button>
-        </div> 
+        </div>  -->
       
         <div style="margin-top:20px;">
             <p>已选择的path ID： {{permissionForm.menuIds}}</p>
