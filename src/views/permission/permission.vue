@@ -5,7 +5,7 @@
             <el-form-item label="角色名称">
                 <el-input v-model="roleName" style="width:300px"></el-input>
             </el-form-item>
-            <el-button @click="createRole">提交</el-button> -->
+            <el-button @click="createRole">提交</el-button>
         </el-form>
 
         <el-card style="width:400px;">
@@ -22,6 +22,37 @@
             </el-tree>
         </el-card>
         
+
+        <!-- <table class="table">
+            <col width="200" />
+            <col width="50" />
+            <col width="50" />
+            <col width="50" />
+            <thead>
+                <tr>
+                    <th>栏目名称</th>
+                    <th>编辑</th>
+                    <th>删除</th>
+                    <th>修改</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(item,index) in pathList" :key="index">
+                    <td>{{item.name}}</td>
+                    <td><input type="checkbox"></td>
+                    <td><input type="checkbox"></td>
+                    <td><input type="checkbox"></td>
+                </tr>
+            </tbody>
+        </table> -->
+
+        <div>
+            <p><span>栏目名称</span><span>编辑</span><span>删除</span><span>修改</span></p>
+        </div>
+
+
+
+
 
 
         <div class="buttons">
@@ -56,7 +87,6 @@
 // var dataList = [{"id":"1","cdmc":"网格管理","checked":true,"children":[{"id":"2","cdmc":"社区列表","checked":true},{"id":"3","cdmc":"网格列表","checked":true},{"id":"4","cdmc":"社工管理","checked":true}]},{"id":"5","cdmc":"人口信息","checked":false,"children":[{"id":"6","cdmc":"人口列表","checked":false}]},{"id":"7","cdmc":"政策法规","checked":false,"children":[{"id":"8","cdmc":"分类管理","checked":false},{"id":"9","cdmc":"内容管理","checked":false}]},{"id":"10","cdmc":"业务指南","checked":false,"children":[{"id":"11","cdmc":"分类管理","checked":false},{"id":"12","cdmc":"内容管理","checked":false}]},{"id":"13","cdmc":"日新广记","checked":false,"children":[{"id":"14","cdmc":"日新广记列表","checked":false}]},{"id":"15","cdmc":"公益银行","checked":false,"children":[{"id":"16","cdmc":"积分列表","checked":false}]},{"id":"17","cdmc":"设置管理","checked":true,"children":[{"id":"18","cdmc":"角色管理","checked":true},{"id":"19","cdmc":"管理员列表","checked":false},{"id":"20","cdmc":"操作日志","checked":false}]}]
 
 // var d;
-
 export default {
     data() {
         const generateData = _ => {
@@ -90,7 +120,7 @@ export default {
         }
     },
     created(){
-        this.getNavList()
+        this.getMenuList()
 
 
     },
@@ -183,6 +213,12 @@ export default {
 </script>
 
 <style lang="less">
+.table{
+    th,td{
+        text-align: center;
+    }
+   
+}
 .el-transfer-panel__body {
     height:100px;
 }
