@@ -10,8 +10,12 @@ export default {
     getPermission(roleId) {
         return $http.get('/permission/'+roleId);
     },
-    createPermission(data) {
-        return $http.post('/permission', data);
+    createPermission(roleId,data) {
+        return $http.post('/permission', { roleId, data });
+    },
+    //获取角色
+    getRoles() {
+        return $http.get('/permission/roles/roles');
     },
     //创建角色
     createRole(name) {

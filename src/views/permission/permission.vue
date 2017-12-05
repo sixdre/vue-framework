@@ -23,42 +23,19 @@
         </el-card> -->
         
 
-        <!-- <table class="table">
-            <col width="200" />
-            <col width="50" />
-            <col width="50" />
-            <col width="50" />
-            <thead>
-                <tr>
-                    <th>栏目名称</th>
-                    <th>编辑</th>
-                    <th>删除</th>
-                    <th>修改</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(item,index) in pathList" :key="index">
-                    <td>{{item.name}}</td>
-                    <td><input type="checkbox"></td>
-                    <td><input type="checkbox"></td>
-                    <td><input type="checkbox"></td>
-                </tr>
-            </tbody>
-        </table> -->
 
-        <div>
-           <per :menus="pathList"></per>
+        <div class="menus_wrapper">
+            <div class="menus_head">
+                <span class="menus_title">栏目名称</span>
+                <div class="menus_op">
+                    <span>编辑</span>
+                    <span>删除</span>
+                    <span>添加</span>
+                </div>
+            </div>
+           <per :data="pathList" @confirmper="createPermission"></per>
         </div>
 
-
-
-
-
-
-        <!-- <div class="buttons">
-            <el-button @click="createPermission">提交</el-button>
-        </div>  -->
-      
         <div style="margin-top:20px;">
             <p>已选择的path ID： {{permissionForm.menuIds}}</p>
         </div>
@@ -84,7 +61,7 @@
 </template>
 
 <script>
-import per from '@/components/per.vue'
+import per from '@/components/per/per.vue'
 // var dataList = [{"id":"1","cdmc":"网格管理","checked":true,"children":[{"id":"2","cdmc":"社区列表","checked":true},{"id":"3","cdmc":"网格列表","checked":true},{"id":"4","cdmc":"社工管理","checked":true}]},{"id":"5","cdmc":"人口信息","checked":false,"children":[{"id":"6","cdmc":"人口列表","checked":false}]},{"id":"7","cdmc":"政策法规","checked":false,"children":[{"id":"8","cdmc":"分类管理","checked":false},{"id":"9","cdmc":"内容管理","checked":false}]},{"id":"10","cdmc":"业务指南","checked":false,"children":[{"id":"11","cdmc":"分类管理","checked":false},{"id":"12","cdmc":"内容管理","checked":false}]},{"id":"13","cdmc":"日新广记","checked":false,"children":[{"id":"14","cdmc":"日新广记列表","checked":false}]},{"id":"15","cdmc":"公益银行","checked":false,"children":[{"id":"16","cdmc":"积分列表","checked":false}]},{"id":"17","cdmc":"设置管理","checked":true,"children":[{"id":"18","cdmc":"角色管理","checked":true},{"id":"19","cdmc":"管理员列表","checked":false},{"id":"20","cdmc":"操作日志","checked":false}]}]
 
 // var d;
@@ -113,7 +90,6 @@ export default {
                 menuIds:'1,2,3',
             },
             pathList: [],
-            selectMenus:[],
             defaultProps: {
                 children: 'child',
                 label: 'name'
@@ -123,8 +99,6 @@ export default {
     },
     created(){
         this.getMenuList()
-
-
     },
     methods: {
         //分配权限
@@ -145,16 +119,6 @@ export default {
             }
             
         },
-        selectMenu(item,index){
-            console.log(item.checked)
-            if(item.checked){
-                this.selectMenus.push(item);
-            }else{
-                 this.selectMenus.splice(index,1);
-            }
-
-            console.log(this.selectMenus)
-        },
         //获取所有的菜单
         async getMenuList(){
             let res = await this.$Api.getMenuList();
@@ -168,10 +132,21 @@ export default {
 
            //this.permissionForm.menuIds = this.$refs.tree.getCheckedKeys().join(',');
         },
-        async createPermission(){
-            let res = await this.$Api.getPermission()
-            let data = res.data.data;
-            this.$store.commit('permission/setList', data)
+        async createPermission(val){
+            console.log(val);
+            let res = await this.$Api.createPermission(2,val);
+            if(res.data.code===1){
+                this.$message({
+                    showClose: true,
+                    message: res.data.msg,
+                    type: 'success'
+                });
+            }else{
+                this.$message.error(res.data.msg);
+            }
+            // let res = await this.$Api.getPermission()
+            // let data = res.data.data;
+            // this.$store.commit('permission/setList', data)
             //  let res = await this.$Api.createPermission(this.permissionForm)
             //  let data = res.data.data;
             // // this.$store.commit('permission/setList', data)
@@ -223,5 +198,47 @@ export default {
 }
 .el-transfer-panel__body {
     height:100px;
+}
+.menus_wrapper{
+    width: 600px;
+    .menus_head{
+        justify-content: space-between;
+    }
+    .menus_head,.menus_item{
+        display: flex;
+        align-items: center;
+        border-top: 1px solid #ddd;
+        .item_grid{
+            display: flex;
+            flex: auto;
+            justify-content: space-between;
+        }
+        .menus_op{
+            display: flex;
+            width: 350px;
+            span{
+                flex: 1;
+                align-items: center;
+                text-align: center;
+            }
+        }
+        span{
+            padding: 5px 8px;
+        }
+    }
+    .menus_head{
+        line-height: 1.8;
+        background-color: #ddd;
+    }
+   
+    .menus_title{
+        display: inline-block;
+      
+    }
+    .childDiv{
+        .item_grid{
+            padding-left: 30px;
+        }
+    }
 }
 </style>
