@@ -12,8 +12,6 @@
 		</div> 
 		<div class="table_container">
 			<el-table :data="roles"  style="width: 100%;">
-				<el-table-column type="selection" width="55">
-				</el-table-column>
 				<el-table-column type="index" width="60" label="排序">
 				</el-table-column>
 				<el-table-column prop="name" label="角色名称">
@@ -24,7 +22,9 @@
 				</el-table-column>
 				<el-table-column label="操作" width="150">
 					<template slot-scope="scope">
-                        <el-button size="small" @click="handlePermissionDialog(scope.row)">分配权限</el-button>
+                        <el-button size="small" v-if="!scope.row.permission" @click="handlePermissionDialog(scope.row)">分配权限</el-button>
+                        <router-link tag="button" v-else :to="{path: '/permission',query:{id:scope.row.id}}">修改权限</router-link>
+                        <!-- <el-button size="small" v-if="scope.row.permission.length" @click="handlePermissionEditDialog(scope.row)">修改权限</el-button> -->
 					</template>
 				</el-table-column>
 			</el-table>
@@ -39,18 +39,29 @@
 
         <!--分配权限弹框  -->
         <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false">
-            <el-input v-model="role.name" :readonly="true"></el-input>
-			<div class="menus_wrapper">
-                <div class="menus_head">
-                    <span class="menus_title">栏目名称</span>
-                    <div class="menus_op">
-                        <span>编辑</span>
-                        <span>删除</span>
-                        <span>添加</span>
-                    </div>
+            <el-form label-width="80px" style="width:200px">
+                <el-form-item label="角色名称">
+                    <el-input v-model="role.name" :disabled="true" readonly></el-input>
+                </el-form-item>
+            </el-form>
+            <el-card>
+                <div slot="header" class="clearfix">
+                    <span>权限分配</span>
+                    <el-button style="float: right; padding: 3px 0" type="text" @click="createPermission">分配权限</el-button>
                 </div>
-                <per :data="permissions" @confirmper="createPermission"></per>
-            </div>
+                <el-tree :data="permissions"
+                    show-checkbox 
+                    default-expand-all 
+                    node-key="id"
+                    ref="tree"
+                    :props="defaultProps"
+                    :check-strictly="false"
+                    highlight-current
+                    :expand-on-click-node="false"
+                    :render-content="renderContent"
+                    >
+                </el-tree>
+            </el-card> 
 		</el-dialog>
 
 		<!--新增界面弹框-->
@@ -86,7 +97,12 @@ export default{
             addFormVisible:false,
 			isEdit:false,   //是否为更新编辑
             roles:[],
-            permissions:[]
+            permissions:[],
+            menuList:[],
+            defaultProps: {
+                children: 'child',
+                label: 'name'
+            },
 		}
 	},
 	computed:{
@@ -100,20 +116,46 @@ export default{
 	},
 	created(){
         this.getRoles();
-        this.getMenuList();
+        //this.getMenuList();
 	},
 	methods:{
         handleAddDialog(){
             this.addFormVisible = true;
         },
-        //获取所有的菜单
-        async getMenuList(){
+        //分配权限弹框
+		async handlePermissionDialog(row){
+			this.isEdit = true;
+            this.role.id = row.id;
+            this.role.name = row.name;
             let res = await this.$Api.getMenuList();
             this.permissions = res.data.data;
+            this.$nextTick(()=>{
+                this.dialogVisible = true;
+            })
+        },
+        //修改权限弹框
+        async handlePermissionEditDialog(row){
+            this.role.id = row.id;
+            this.role.name = row.name;
+            let res = await this.$Api.getPermission( row.id);
+            this.permissions = res.data.data;
+            this.dialogVisible = true;
+            this.$nextTick(()=>{
+                this.$refs.tree.setCheckedKeys(res.data.ids);
+                //this.$refs.tree.setCheckedNodes(res.data.data);
+                 //this.permissions = res.data.data;
+                // this.$refs.tree.updateKeyChildren(0,res.data.data)
+            })
+            // if(res.data.code===1){
+            //     this.permissions = res.data.data;
+            // }else{
+            //     this.$message.error('权限列表获取失败');
+            // }
         },
         //创建权限
-        async createPermission(val){
+        async createPermission(){
             let roleId = this.role.id;
+            let val = this.$refs.tree.getCheckedNodes();
             let res = await this.$Api.createPermission(roleId,val);
             if(res.data.code===1){
                 this.$message({
@@ -122,6 +164,7 @@ export default{
                     type: 'success'
                 });
                 this.dialogVisible=false;
+                this.getRoles();
             }else{
                 this.$message.error(res.data.msg);
             }
@@ -134,21 +177,6 @@ export default{
             }else{
                 this.$message.error(res.data.msg);
             }
-        },
-        // async getPermissionByRoleId(id){
-        //     let res = await this.$Api.getPermission(id);
-        //     if(res.data.code===1){
-        //         this.permissions = res.data.data;
-        //     }else{
-        //         this.$message.error('权限列表获取失败');
-        //     }
-        // },
-		//分配权限弹框
-		handlePermissionDialog(row){
-			this.isEdit = true;
-            this.dialogVisible = true;
-            this.role.id = row.id;
-            this.role.name = row.name;
         },
         //新增角色
         async addSubmit(){
@@ -165,6 +193,53 @@ export default{
             }else{
                 this.$message.error(res.data.msg);
             }
+        },
+        setPermission(ev,data,val){
+            if(ev){
+                if( data.indexOf(val)==-1){
+                    data.push(val);
+                }
+            }else{
+                if( data.indexOf(val)!=-1){
+                    for(var i=0; i<data.length; i++) {
+                        if(data[i] == val) {
+                            data.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+            }
+        },
+      
+        renderContent(h, { node, data, store }) {
+            function pdxuan(data,val){
+                return data.includes(val);
+            }
+
+            return h('div',{attrs:{style:"display: flex;justify-content: space-between;width:100%;"}},[
+                h('span',node.label),
+                h('span',[
+                    h('el-checkbox',{attrs:{label:'add',checked:pdxuan(data.permission,'add')},on:{
+                            change:($event)=>{
+                                this.setPermission($event,data.permission,'add');
+                            // return false;
+                        }
+                    }},'新增'),
+                    h('el-checkbox',{attrs:{label:'edit',checked:pdxuan(data.permission,'edit')},on:{
+                        change:($event)=>{
+                            this.setPermission($event,data.permission,'edit');
+                            //return false;
+                        }
+                    }},'修改'),
+                    h('el-checkbox',{attrs:{label:'remove',checked:pdxuan(data.permission,'remove')},on:{
+                        change:($event)=>{
+                            this.setPermission($event,data.permission,'remove');
+                            // return false;
+                        }
+                    }},'删除')
+                 ])
+            ])
+            
         }
 	}
 }

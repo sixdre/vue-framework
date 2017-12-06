@@ -8,7 +8,10 @@ export default {
         return $http.post('/api/login',{username:username,password:password});
     },
     getPermission(roleId) {
-        return $http.get('/permission/'+roleId);
+        return $http.post('/permission/getPermission',{roleId:roleId});
+    },
+    getPermissionForUpdate(roleId) {
+        return $http.post('/permission/getPermissionForUpdate',{roleId:roleId});
     },
     createPermission(roleId,data) {
         return $http.post('/permission', { roleId, data });
