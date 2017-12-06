@@ -51,6 +51,14 @@ const asyncRouter = [
             permission:[]
         },
 		component: r => require.ensure([], () => r(require('@/views/permission/role')), 'role'),
+    },
+    {
+		path: '/users',
+        name: 'users',
+        meta:{
+            permission:[]
+        },
+		component: r => require.ensure([], () => r(require('@/views/permission/users')), 'users'),
     }
     
 ]

@@ -8,23 +8,25 @@
             <el-button @click="createRole">提交</el-button>
         </el-form> -->
 
-        <!-- <el-card style="width:400px;">
+         <el-card style="width:500px;">
             <div slot="header" class="clearfix">
                 <span>权限分配</span>
-                <el-button style="float: right; padding: 3px 0" type="text" @click="getCheckedKeys">分配权限</el-button>
+                <el-button style="float: right; padding: 3px 0" type="text" @click="getCheckedNodes">分配权限</el-button>
             </div>
             <el-tree :data="pathList"
                 show-checkbox default-expand-all 
                 node-key="id" ref="tree"
                 :props="defaultProps"
                 :check-strictly="false" highlight-current
+                :expand-on-click-node="false"
+                :render-content="renderContent"
                 >
             </el-tree>
-        </el-card> -->
+        </el-card> 
         
 
 
-        <div class="menus_wrapper">
+        <!-- <div class="menus_wrapper">
             <div class="menus_head">
                 <span class="menus_title">栏目名称</span>
                 <div class="menus_op">
@@ -38,7 +40,7 @@
 
         <div style="margin-top:20px;">
             <p>已选择的path ID： {{permissionForm.menuIds}}</p>
-        </div>
+        </div> -->
         
          <!--
         <el-dialog
@@ -152,24 +154,45 @@ export default {
             // // this.$store.commit('permission/setList', data)
             //  console.log(res.data.data)
         },
+        setPermission(ev,data,val){
+            if(ev){
+                if( data.indexOf(val)==-1){
+                    data.push(val);
+                }
+            }else{
+                if( data.indexOf(val)!=-1){
+                    for(var i=0; i<data.length; i++) {
+                        if(data[i] == val) {
+                            data.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+            }
+        },
         renderContent(h, { node, data, store }) {
-            return h('span',[
+            return h('div',{attrs:{style:"display: flex;justify-content: space-between;width:100%;"}},[
                 h('span',node.label),
-                h('el-checkbox',{attrs:{'v-model':"checked"},on:{
-                    change:function(){
-                        console.log(store)
-                    }
-                }},'新增'),
-                 h('el-checkbox',{attrs:{value:2},on:{
-                    change:function(){
-                        alert()
-                    }
-                }},'修改'),
-                 h('el-checkbox',{attrs:{value:3},on:{
-                    change:function(){
-                        alert()
-                    }
-                }},'删除')
+                h('span',[
+                    h('el-checkbox',{attrs:{label:'add'},on:{
+                        change:($event)=>{
+                            this.setPermission($event,data.permission,'add');
+                        // return false;
+                        }
+                    }},'新增'),
+                    h('el-checkbox',{attrs:{label:'edit'},on:{
+                        change:($event)=>{
+                        this.setPermission($event,data.permission,'edit');
+                            //return false;
+                        }
+                    }},'修改'),
+                    h('el-checkbox',{attrs:{label:'remove'},on:{
+                    change:($event)=>{
+                        this.setPermission($event,data.permission,'remove');
+                        // return false;
+                        }
+                    }},'删除')
+                 ])
             ])
             
             

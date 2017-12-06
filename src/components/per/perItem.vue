@@ -68,10 +68,6 @@ export default {
         }
     },
     methods:{
-        submitPer(){
-            console.log(this.menus)
-            this.$emit('selectPer')
-        },
         checkInclude(id,arr){
             var flag = false;
             arr.forEach(item=>{
@@ -100,6 +96,45 @@ export default {
                 })
             }
             this.$emit('changeper',this.checkIds)
+
+
+            // if(checked){
+            //     if(!this.checkIds.length){
+            //        this.checkIds.push(item.id);
+            //     }else{
+            //         if(!this.checkIds.includes(item.id)){
+            //             this.checkIds.push(item.id);
+            //         }
+            //     }
+            // }else{
+            //     this.checkIds.forEach((val,index)=>{
+            //         if(val==item.id){
+            //             this.checkIds.splice(index,1);
+            //             return ;
+            //         }
+            //     })
+            // }
+
+            // function re(data,checkIds){
+            //     var newarr = [];
+            //     function createRouter(data) {
+            //         data.forEach((item) => {
+            //             if (item.child && item.child.length) {
+            //                 // 递归
+            //                 createRouter(item.child)
+            //             }
+
+            //             if(checkIds.includes(item.id)){
+            //                 newarr.push(item);
+            //             }
+            //         })
+            //     }
+            //     createRouter(data)
+            //     return  newarr;
+            // }
+            // console.log(re(this.menus,this.checkIds))
+
+        
         }
     }
    
