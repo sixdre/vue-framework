@@ -1,7 +1,7 @@
 <template>
 	<section class="section">
 		<div class="section_breadcrumb">
-			<strong class="title">列表</strong>
+			<strong class="title">角色管理</strong>
 		</div>
 		 <div class="search_toolbar">
 			<el-form :inline="true"  class="demo-form-inline">
@@ -247,74 +247,33 @@ export default{
 </script>
 
 <style scoped lang="less">
-	.section{
-		.section_breadcrumb{
-			padding: 10px 20px;
-			margin-bottom: 10px;
-			background-color: #f3f3f3;
-			border-bottom: 1px solid #eee;
-			overflow: hidden;
-			.title{
-				font-size: 18px;
-			}
-		}
-		.search_toolbar{
-			background: #eff3f8;
-			padding: 10px;
-			margin: 10px 0;
-			margin-left: 20px;
-			.el-form-item {
-				margin-bottom: 0px;
-			}
-		}
-		.table_container{
-			margin-left: 20px;
-			.el-table__header-wrapper {
-				background-color: #44a704;
-			}
-		}
-	
-	}
-    .menus_wrapper{
-    width: 600px;
-    .menus_head{
-        justify-content: space-between;
-    }
-    .menus_head,.menus_item{
-        display: flex;
-        align-items: center;
-        border-top: 1px solid #ddd;
-        .item_grid{
-            display: flex;
-            flex: auto;
-            justify-content: space-between;
-        }
-        .menus_op{
-            display: flex;
-            width: 350px;
-            span{
-                flex: 1;
-                align-items: center;
-                text-align: center;
-            }
-        }
-        span{
-            padding: 5px 8px;
+.section{
+    .section_breadcrumb{
+        padding: 10px 20px;
+        margin-bottom: 10px;
+        background-color: #f3f3f3;
+        border-bottom: 1px solid #eee;
+        overflow: hidden;
+        .title{
+            font-size: 18px;
         }
     }
-    .menus_head{
-        line-height: 1.8;
-        background-color: #ddd;
-    }
-   
-    .menus_title{
-        display: inline-block;
-      
-    }
-    .childDiv{
-        .item_grid{
-            padding-left: 30px;
+    .search_toolbar{
+        background: #eff3f8;
+        padding: 10px;
+        margin: 10px 0;
+        margin-left: 20px;
+        .el-form-item {
+            margin-bottom: 0px;
         }
     }
+    .table_container{
+        margin-left: 20px;
+        .el-table__header-wrapper {
+            background-color: #44a704;
+        }
+    }
+
 }
+
 </style>
