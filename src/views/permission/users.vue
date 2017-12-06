@@ -3,20 +3,11 @@
 		<div class="section_breadcrumb">
 			<strong class="title">用户列表</strong>
 		</div>
-		 <div class="search_toolbar">
-			<el-form :inline="true"  class="demo-form-inline">
-				<el-form-item>
-					<el-button type="primary" size="small" @click="handleAddDialog">新增</el-button>
-				</el-form-item>
-			</el-form>
-		</div> 
 		<div class="table_container">
-			<el-table :data="roles"  style="width: 100%;">
-				<el-table-column type="selection" width="55">
-				</el-table-column>
+			<el-table :data="users"  style="width: 100%;">
 				<el-table-column type="index" width="60" label="排序">
 				</el-table-column>
-				<el-table-column prop="name" label="用户名称">
+				<el-table-column prop="username" label="用户名称">
 				</el-table-column>
 				<el-table-column prop="createdAt" label="创建时间">
 				</el-table-column>
@@ -39,21 +30,12 @@
 
         <!--分配权限弹框  -->
         <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false">
-           
+           <el-checkbox-group>
+				<el-checkbox v-for="role in roles" :label="role.id" :key="role.name">{{role.name}}</el-checkbox>
+		   </el-checkbox-group>
 		</el-dialog>
 
-		<!--新增界面弹框-->
-		 <el-dialog :visible.sync="addFormVisible" :close-on-click-modal="false">
-			<el-form :model="form" label-width="80px"  ref="form">
-				<el-form-item label="用户名称" prop="name">
-					<el-input v-model="form.name" auto-complete="off"></el-input>
-				</el-form-item>
-			</el-form>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click.native="addFormVisible = false">取消</el-button>
-				<el-button type="primary" @click.native="addSubmit">提交</el-button>
-			</div>
-		</el-dialog> 
+	
 	</section>
 </template>
 
@@ -61,18 +43,9 @@
 export default{
 	data(){
 		return {
-            form:{
-				name:null
-            },
-			role:{
-                id:null,
-				name:null,
-			},
             dialogVisible:false,
-            addFormVisible:false,
-			isEdit:false,   //是否为更新编辑
-            roles:[],
-            permissions:[]
+			users:[],
+			roles:[]
 		}
 	},
 	computed:{
@@ -85,18 +58,24 @@ export default{
 		}
 	},
 	created(){
-        this.getUsers();
-        this.getRoles();
+		this.getUsers();
+		this.getRoles();
 	},
 	methods:{
-        handleAddDialog(){
-            this.addFormVisible = true;
-        },
+		handleRoleDialog(){
+			this.dialogVisible = true;
+		},
         //获取用户列表
         async getUsers(){
-          
+           let res = await this.$Api.getUsers();
+            if(res.data.code===1){
+                this.users = res.data.data;
+            }else{
+                this.$message.error(res.data.msg);
+            }
         },
         //获取所有的角色
+		//获取所有的角色
         async getRoles(){
             let res = await this.$Api.getRoles();
             if(res.data.code===1){
@@ -105,10 +84,8 @@ export default{
                 this.$message.error(res.data.msg);
             }
         },
-        //新增用户
-        async addSubmit(){
-         
-        }
+
+       
 	}
 }
 

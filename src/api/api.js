@@ -20,6 +20,10 @@ export default {
     getRoles() {
         return $http.get('/permission/roles/roles');
     },
+    //获取用户
+    getUsers() {
+        return $http.get('/users');
+    },
     //创建角色
     createRole(name) {
          return $http.post('/permission/role', {name});
