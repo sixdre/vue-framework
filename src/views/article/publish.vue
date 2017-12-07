@@ -186,32 +186,5 @@ export default{
 </script>
 
 <style scoped lang="less">
-	.section{
-		.section_breadcrumb{
-			padding: 10px 20px;
-			margin-bottom: 10px;
-			background-color: #f3f3f3;
-			border-bottom: 1px solid #eee;
-			overflow: hidden;
-			.title{
-				font-size: 18px;
-			}
-		}
-		.search_toolbar{
-			background: #eff3f8;
-			padding: 10px;
-			margin: 10px 0;
-			margin-left: 20px;
-			.el-form-item {
-				margin-bottom: 0px;
-			}
-		}
-		.table_container{
-			margin-left: 20px;
-			.el-table__header-wrapper {
-				background-color: #44a704;
-			}
-		}
-	
-	}
+
 </style>
