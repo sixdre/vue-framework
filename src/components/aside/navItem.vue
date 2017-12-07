@@ -16,7 +16,7 @@
 
 			<router-link v-else :to="item.path">
 				<el-menu-item :index="item.path">
-					<template slot="title"><i v-if='item.icon' :class="item.icon"></i>{{item.name}} </template>
+					<template slot="title"><i v-if='item.icon' :class="item.icon"></i>{{ item.name}} </template>
 				</el-menu-item>
 			</router-link>
 		</div>

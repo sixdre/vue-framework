@@ -8,6 +8,12 @@
 				<el-table-column type="index" width="60" label="排序">
 				</el-table-column>
 				<el-table-column prop="username" label="用户名称">
+					<template slot-scope="scope">
+						<el-badge v-if="scope.row.roleSuper" is-dot style="margin-top:5px;">
+							{{scope.row.username}}
+						</el-badge>
+						<span v-else>{{scope.row.username}}</span>
+					</template>
 				</el-table-column>
 				<el-table-column prop="roleName" label="角色名称">
 				</el-table-column>
