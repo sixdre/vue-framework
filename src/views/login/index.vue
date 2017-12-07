@@ -28,7 +28,7 @@
         data() {
             return {
                 loginForm: {
-                    username: 'benben',
+                    username: 'admin',
                     password: '123'
                 },
                 loginRules: {
@@ -50,7 +50,7 @@
                 if(res.data.code===1){
                     this.$store.commit('user/setToken', res.data.token);
                     this.$store.commit('user/setRole', res.data.role);
-                    this.$store.commit('permission/setList', res.data.data);
+                    // this.$store.commit('permission/setList', res.data.data);
                     this.$router.push({path: '/'})
                 }else{
                     this.$message.error(res.data.msg);
