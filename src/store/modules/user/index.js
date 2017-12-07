@@ -38,6 +38,7 @@ const actions = {
         return new Promise((resolve) => {
             commit('setToken', '')
             commit('setRole', '')
+            commit('permission/setList', [], { root: true })    // 调用permission模块的 mutations
             resolve()
         })
     }

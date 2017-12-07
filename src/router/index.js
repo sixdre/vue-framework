@@ -75,41 +75,44 @@ const router = new Router({
 
 
 router.beforeEach((to, from, next) => {
-    if (!Auth.getToken()||!Auth.getRole()) { //token 失效
+    if (Auth.getToken() && Auth.getRole()) {
+        if (to.path === '/login') {     //已登录不可以再次回到登录页面，再次登录需要先退出系统
+            router.replace('/')
+        } else {
+            if (store.state.permission.list.length === 0) { //页面刷新需要重新请求
+                store.dispatch('permission/getPermission').then(res => {
+                    // 匹配并生成需要添加的路由对象
+                    routerMatch(res, asyncRouter).then(data => {
+                        if (!data || !data.length) {
+                            next()
+                        } else {
+                            router.addRoutes(data)
+                            next({ ...to}) 
+                        }
+                    })
+                }).catch(() => {
+                    // console.log('登录错误')
+                    // store.dispatch('user/logout').then(() => {
+                    // 	router.replace('/login')
+                    // })
+                })
+            } else {
+                if (to.matched.length) {
+                    // if(whiteList.indexOf(to.path) < 0){
+                    // 	// store.dispatch('user/actionlog', to)
+                    // }
+                    next()
+                } else {
+                    router.replace('/404')
+                }
+            }
+        }
+    } else {
         if (whiteList.indexOf(to.path) >= 0) {
             next()
         } else {
             router.replace('/login')
         }
-    } else {
-        if (store.state.permission.list.length === 0) { //页面刷新需要重新请求
-            store.dispatch('permission/getPermission').then(res => {
-                // 匹配并生成需要添加的路由对象
-                routerMatch(res, asyncRouter).then(data => {
-                    if (!data || !data.length) {
-                        next()
-                    } else {
-                        router.addRoutes(data)
-                        next(to.path);
-                    }
-                })
-            }).catch(() => {
-                // console.log('登录错误')
-                // store.dispatch('user/logout').then(() => {
-                // 	router.replace('/login')
-                // })
-            })
-        } else {
-            if (to.matched.length) {
-                // if(whiteList.indexOf(to.path) < 0){
-                // 	// store.dispatch('user/actionlog', to)
-                // }
-                next()
-            } else {
-                router.replace('/404')
-            }
-        }
-
     }
 
 })
