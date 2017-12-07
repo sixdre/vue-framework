@@ -1,23 +1,26 @@
 <template>
 	<div class='menu-wrapper'>
 		<div v-for="(item,index) in routes" :key="index">
-
 			<el-submenu :index="item.name" v-if="item.child&&item.child.length>0">
-				<template slot="title"><i v-if='item.icon' :class="item.icon"></i>{{item.name}} </template>
-				<div v-for="(child,index) in item.child" :key="index" v-if='!child.hidden'>
-					<nav-item class='nest-menu' v-if='child.child&&child.child.length>0'  :routes='[child]'> </nav-item>
-					<router-link v-else :to="child.path">
-						<el-menu-item :index="child.path">
-							<template slot="title"><i v-if='child.icon' :class="child.icon"></i>{{child.name}} </template>
-						</el-menu-item>
-					</router-link>
-        		</div>
+				<template v-if="!item.hidden">
+					<template slot="title"><i v-if='item.icon' :class="item.icon"></i>{{item.name}} </template>
+					<div v-for="(child,index) in item.child" :key="index" v-if='!child.hidden'>
+						<nav-item class='nest-menu' v-if='child.child&&child.child.length>0'  :routes='[child]'> </nav-item>
+						<router-link v-else :to="child.path">
+							<el-menu-item :index="child.path">
+								<template slot="title"><i v-if='child.icon' :class="child.icon"></i>{{child.name}} </template>
+							</el-menu-item>
+						</router-link>
+					</div>
+				</template>
 			</el-submenu>
 
 			<router-link v-else :to="item.path">
-				<el-menu-item :index="item.path">
-					<template slot="title"><i v-if='item.icon' :class="item.icon"></i>{{ item.name}} </template>
-				</el-menu-item>
+				<template v-if="!item.hidden">
+					<el-menu-item :index="item.path">
+						<template slot="title"><i v-if='item.icon' :class="item.icon"></i>{{ item.name}} </template>
+					</el-menu-item>
+				</template>
 			</router-link>
 		</div>
 		<!-- <el-submenu index="3">
