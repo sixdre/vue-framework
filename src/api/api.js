@@ -16,6 +16,12 @@ export default {
     createPermission(roleId, data) {
         return $http.post('/permission', { roleId, data });
     },
+    createNewPermission(data) {
+        return $http.post('/permission/v2/createPermission', data);
+    },
+    getNewPermission() {
+        return $http.get('/permission/v2/getPermission');
+    },
     //获取角色
     getRoles() {
         return $http.get('/permission/roles');

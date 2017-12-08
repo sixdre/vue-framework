@@ -1,10 +1,5 @@
 <template>
 	<section class="section">
-        <el-form label-width="80px" style="width:200px">
-            <el-form-item label="角色名称">
-                <el-input v-model="role.name" :disabled="true" readonly></el-input>
-            </el-form-item>
-        </el-form>
         <el-card>
             <div slot="header" class="clearfix">
                 <span>权限分配</span>
@@ -44,7 +39,7 @@ export default{
 		}
 	},
 	created(){
-      this.getPermissionForUpdate();
+        this.getPermissionForUpdate();
 	},
 	methods:{
         getPermissionForUpdate(){

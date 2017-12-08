@@ -4,7 +4,7 @@
 			<strong class="title">用户列表</strong>
 		</div>
 		<div class="table_container">
-			<el-table :data="users"  style="width: 100%;">
+			<el-table :data="users" style="width: 100%;">
 				<el-table-column type="index" width="60" label="排序">
 				</el-table-column>
 				<el-table-column prop="username" label="用户名称">
@@ -95,7 +95,7 @@ export default{
 		},
         //获取用户列表
         async getUsers(){
-           let res = await this.$Api.getUsers();
+		   let res = await this.$Api.getUsers();
             if(res.data.code===1){
                 this.users = res.data.data;
             }else{

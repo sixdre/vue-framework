@@ -38,15 +38,27 @@ const asyncRouter = [
     },
     {
 		path: '/permission',
-        name: 'permission',
         meta:{
             permission:[]
         },
-		component: r => require.ensure([], () => r(require('@/views/permission/permission')), 'permission'),
+        component: r => require.ensure([], () => r(require('@/layouts/empty')), 'permission'),
     },
     {
-		path: '/role',
-        name: 'role',
+		path: '/permission/menu',
+        meta:{
+            permission:[]
+        },
+		component: r => require.ensure([], () => r(require('@/views/permission/menu')), 'permission'),
+    },
+    {
+		path: '/permission/permission',
+        meta:{
+            permission:[]
+        },
+		component: r => require.ensure([], () => r(require('@/views/permission/list')), 'permission'),
+    },
+    {
+		path: '/permission/role',
         meta:{
             permission:[]
         },

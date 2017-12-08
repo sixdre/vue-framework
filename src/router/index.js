@@ -1,8 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+// import NProgress from 'nprogress'
+// import 'nprogress/nprogress.css'
 import store from '@/store'
 import Auth from '@/services/auth'
 import asyncRouter from './asyncRouter'
+
+
+// NProgress.configure({ showSpinner: false });
 
 Vue.use(Router)
 
@@ -18,18 +23,15 @@ const whiteList = [
  * @param {array} asyncRouter 异步路由对象
  */
 function routerMatch(permission, asyncRouter) {
-    //console.log(permission)
     return new Promise((resolve) => {
         const routers = asyncRouter[0]
-            // 创建路由
         function createRouter(permission) {
             permission.forEach((item) => {
                 if (item.child && item.child.length) {
-                    // 递归
                     createRouter(item.child)
                 }
                 let path = item.path
-                    // 循环异步路由，将符合权限列表的路由加入到routers中
+                // 循环异步路由，将符合权限列表的路由加入到routers中
                 asyncRouter.find(function(s) {
                     if (s.path == path) {
                         s.meta.permission = item.permission
@@ -75,6 +77,7 @@ const router = new Router({
 
 
 router.beforeEach((to, from, next) => {
+    // NProgress.start();
     if (Auth.getToken() && Auth.getRole()) {
         if (to.path === '/login') {     //已登录不可以再次回到登录页面，再次登录需要先退出系统
             router.replace('/')
@@ -112,12 +115,15 @@ router.beforeEach((to, from, next) => {
             next()
         } else {
             router.replace('/login')
+            // NProgress.done()
         }
     }
 
 })
 
-
+// router.afterEach(() => {
+//     NProgress.done(); 
+// })
 
 
 export default router
