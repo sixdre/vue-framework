@@ -22,6 +22,12 @@ export default {
     getNewPermission() {
         return $http.get('/permission/v2/getPermission');
     },
+    getMenusPermission() {
+         return $http.get('/permission/v2/getMenusPermission');
+    },
+    saveRolePermission( roleId, menus,resource) {
+         return $http.post('/permission/v2/saveRolePermission', { roleId, menus,resource});
+    },
     //获取角色
     getRoles() {
         return $http.get('/permission/roles');

@@ -2,29 +2,29 @@ import setting from '@/config/setting'
 
 export default {
   login (data) {
-    localStorage.setItem(setting.userToken, data)
+    sessionStorage.setItem(setting.userToken, data);
   },
   setRole(data) {
-    localStorage.setItem('role', data)
+    sessionStorage.setItem('role', data)
   },
   getRole() {
-    return localStorage.getItem('role')
+    return sessionStorage.getItem('role')
   },
   authenticated () {
-    var t = localStorage.getItem(setting.userToken)
+    var t = sessionStorage.getItem(setting.userToken)
     return t && t.length > 0
   },
   authenticatedUid () {
-    var t = localStorage.getItem(setting.uid)
+    var t = sessionStorage.getItem(setting.uid)
     return t && t.length > 0
   },
   getToken () {
-    return localStorage.getItem(setting.userToken)
+    return sessionStorage.getItem(setting.userToken)
   },
   getUid () {
-    return localStorage.getItem(setting.uid)
+    return sessionStorage.getItem(setting.uid)
   },
   logout () {
-    localStorage.removeItem(setting.userToken)
+    sessionStorage.removeItem(setting.userToken)
   }
 }
