@@ -23,7 +23,7 @@
                 <el-table-column label="操作" width="150">
                     <template slot-scope="scope">
                         <el-button size="small" v-if="!scope.row.permission" @click="handlePermissionDialog(scope.row)">分配权限</el-button>
-                        <router-link tag="button" v-else :to="{path: '/permission',query:{id:scope.row.id}}">修改权限</router-link>
+                        <router-link tag="button" v-else :to="{path: '/permission/allot',query:{id:scope.row.id}}">修改权限</router-link>
                         <!-- <el-button size="small" v-if="scope.row.permission.length" @click="handlePermissionEditDialog(scope.row)">修改权限</el-button> -->
                     </template>
                 </el-table-column>
@@ -167,7 +167,7 @@ export default {
                 this.dialogVisible = true;
             })
         },
-        //创建权限
+        //分配权限
         async createPermission() {
             let roleId = this.role.id;
             let val = this.$refs.tree.getCheckedNodes();

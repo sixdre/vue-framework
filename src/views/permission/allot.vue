@@ -35,7 +35,9 @@
             </el-row>
         </el-card>
 
-       
+        <div style="text-align:center;margin-top:20px;">
+            <el-button type="primary" >提交</el-button>
+        </div>
     </section>
 </template>
 
