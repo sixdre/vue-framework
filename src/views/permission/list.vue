@@ -20,7 +20,7 @@
 				</el-table-column>
 				<el-table-column prop="name" label="权限名">
 				</el-table-column>
-				<el-table-column prop="permission" label="权限">
+				<el-table-column prop="resource" label="权限">
 				</el-table-column>
 				<el-table-column prop="tag" label="所属分类">
 					<template slot-scope="scope">
@@ -43,8 +43,8 @@
 				<el-form-item label="权限名" prop="name">
 					<el-input v-model="form.name" auto-complete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="权限路由" prop="permission">
-					<el-input v-model="form.permission" auto-complete="off"></el-input>
+				<el-form-item label="权限路由" prop="resource">
+					<el-input v-model="form.resource" auto-complete="off"></el-input>
 				</el-form-item>
 				<el-form-item label="请求形式" prop="type">
 					<el-checkbox-group v-model="form.type">
@@ -78,7 +78,7 @@ export default{
 			formName:'form',
 			form:{
 				name:'',
-				permission:'',
+				resource:'',
 				type:[],
 				tag:''
 			},
@@ -90,7 +90,7 @@ export default{
 				name: [
 					{ required: true, message: '请输入权限名称', trigger: 'blur' }
 				],
-				permission: [
+				resource: [
 					{ required: true, message: '请输入请求地址', trigger: 'blur' }
 				],
 				type: [

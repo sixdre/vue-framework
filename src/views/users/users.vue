@@ -22,7 +22,7 @@
 				<el-table-column prop="updatedAt" label="更新时间">
 				</el-table-column>
 				<el-table-column label="操作" width="150">
-					<template slot-scope="scope">
+					<template slot-scope="scope" v-if="!scope.row.roleSuper">
 						<el-button size="small" v-if="!scope.row.roleId" @click="handleRoleDialog(scope.row)">分配角色</el-button>
                         <el-button size="small" v-else @click="handleRoleDialog(scope.row)">修改角色</el-button>
 					</template>

@@ -9,8 +9,10 @@ axios.defaults.baseURL = $config.baseUrl;
 // http request 拦截器
 axios.interceptors.request.use(
 	config => {
-		// config.headers['token'] = token
-		config.headers['uid'] = '1';
+		let token = Auth.getToken()
+		if (token) {
+			config.headers['x-access-token'] = token
+		}
 		return config
 	},
 	err => {

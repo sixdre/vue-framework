@@ -28,9 +28,20 @@ export default {
     saveRolePermission( roleId, menus,resource) {
          return $http.post('/permission/v2/saveRolePermission', { roleId, menus,resource});
     },
+    getRolePermission(roleId) {
+         return $http.get('/permission/v2/getPermissionByRoleId',{params:{roleId}});
+    },
+    //获取tree类型菜单
+    getMenuList() {
+        return $http.get('/permission/v2/menus');
+    },
+    //创建角色
+    createRole(name) {
+        return $http.post('/permission/v2/createRole', { name });
+    },
     //获取角色
     getRoles() {
-        return $http.get('/permission/roles');
+        return $http.get('/permission/v2/roles');
     },
     //获取用户
     getUsers() {
@@ -40,37 +51,5 @@ export default {
     updateUserRole(userId, roleId) {
         return $http.post('/users/role', { userId, roleId });
     },
-    //创建角色
-    createRole(name) {
-        return $http.post('/permission/role', { name });
-    },
-    getMenuList() {
 
-        return $http.get('/permission/menus');
-
-        // return new Promise((resolve) => {
-        //      var data = [
-        //         {
-        //             name: '文章',
-        //             path: '/article',
-        //             child: [
-        //                 {
-        //                     path: '/article/publish',
-        //                     name: '文章发布',
-        //                     //hidden:true,
-        //                     permission: ['edit']
-        //                 },
-        //                 {
-        //                     path: '/article/list',
-        //                     name: '文章列表'
-        //                 }
-        //             ]
-        //         }, {
-        //             name: '文章2',
-        //             path: '/article',
-        //         }
-        //     ]
-        //     resolve(data)
-        // })
-    }
 }

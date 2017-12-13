@@ -23,11 +23,6 @@
 export default{
 	data(){
 		return {
-			role:{
-                id:null,
-				name:null,
-			},
-            dialogVisible:false,
             menuList:[],
             defaultProps: {
                 children: 'child',
@@ -39,6 +34,7 @@ export default{
         this.getMenus();
 	},
 	methods:{
+        //获取前端菜单列表
         async getMenus(){
             try{
                 let res = await this.$Api.getMenuList()
@@ -47,7 +43,7 @@ export default{
 
             }
         },
-        //创建权限
+        //创建菜单
         async createMenu(){
           
         },

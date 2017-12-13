@@ -21,8 +21,8 @@
                 <el-table-column prop="updatedAt" label="更新时间">
                 </el-table-column>
                 <el-table-column label="操作" width="150">
-                    <template slot-scope="scope">
-                        <el-button size="small" v-if="!scope.row.permission" @click="handlePermissionDialog(scope.row)">分配权限</el-button>
+                    <template slot-scope="scope" v-if="!scope.row.super">
+                        <router-link tag="button" v-if="!scope.row.permission" :to="{path: '/permission/allot',query:{id:scope.row.id}}">分配权限</router-link>
                         <router-link tag="button" v-else :to="{path: '/permission/allot',query:{id:scope.row.id}}">修改权限</router-link>
                         <!-- <el-button size="small" v-if="scope.row.permission.length" @click="handlePermissionEditDialog(scope.row)">修改权限</el-button> -->
                     </template>
@@ -30,49 +30,6 @@
             </el-table>
         </div>
 
-        <!--工具条-->
-        <el-col :span="24" class="toolbar">
-            <el-pagination layout="prev, pager, next" :page-size="20" :total="30" style="float:right;">
-            </el-pagination>
-        </el-col>
-
-        <!--分配权限弹框  -->
-        <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false">
-            <el-form label-width="80px" style="width:200px">
-                <el-form-item label="角色名称">
-                    <el-input v-model="role.name" :disabled="true" readonly></el-input>
-                </el-form-item>
-            </el-form>
-            <el-card>
-                <div slot="header" class="clearfix">
-                    <span>菜单分配（前端显示）</span>
-                </div>
-                <el-tree :data="menuList" show-checkbox default-expand-all node-key="id" ref="tree" :props="defaultProps" :check-strictly="false" highlight-current :expand-on-click-node="false" :render-content="renderContent">
-                </el-tree>
-            </el-card>
-
-            <el-card style="margin-top:40px;">
-                <div slot="header" class="clearfix">
-                    <span>资源分配（后台请求）</span>
-                </div>
-                <el-row>
-                    <el-col :md="8" v-for="(item,index) in permissionList" :key="index" ref="resource">
-                        <h4>{{item.name}}</h4>
-                        <div v-if="item.permission">
-                            <li v-for="(per,i) in item.permission" :key="i">
-                                <input type="checkbox" name="resource" :value="per.id">
-                                <label for="">{{per.name}}</label>
-                            </li>
-                        </div>
-                    </el-col>
-                </el-row>
-            </el-card>
-
-            <div slot="footer" class="dialog-footer">
-                <el-button @click.native="dialogVisible = false">取消</el-button>
-                <el-button type="primary" @click.native="saveRolePermission">提交</el-button>
-            </div>
-        </el-dialog>
 
         <!--新增界面弹框-->
         <el-dialog :visible.sync="addFormVisible" :close-on-click-modal="false">
@@ -103,13 +60,7 @@ export default {
             dialogVisible: false,
             addFormVisible: false,
             isEdit: false,   //是否为更新编辑
-            roles: [],
-            permissionList: [],
-            menuList: [],
-            defaultProps: {
-                children: 'child',
-                label: 'name'
-            },
+            roles: []
         }
     },
     computed: {
@@ -123,66 +74,10 @@ export default {
     },
     created() {
         this.getRoles();
-        this.getMenusPermission();
-        //this.getMenuList();
     },
     methods: {
         handleAddDialog() {
             this.addFormVisible = true;
-        },
-        async saveRolePermission() {
-            let roleId = this.role.id;
-            let menus = this.$refs.tree.getCheckedNodes();
-            let permissions = [];
-            document.querySelectorAll('input[name=resource]').forEach(ele => {
-                if (ele.checked) {
-                    permissions.push(ele.value)
-                }
-            });
-            let res = await this.$Api.saveRolePermission(roleId, menus, permissions);
-            if (res.data.code === 1) {
-                this.$message({
-                    showClose: true,
-                    message: res.data.msg,
-                    type: 'success'
-                });
-                this.dialogVisible = false,
-                    this.getRoles();
-            } else {
-                this.$message.error(res.data.msg);
-            }
-        },
-        async getMenusPermission() {
-            let res = await this.$Api.getMenusPermission();
-            this.permissionList = res.data.data;
-        },
-        //分配权限弹框
-        async handlePermissionDialog(row) {
-            this.isEdit = true;
-            this.role.id = row.id;
-            this.role.name = row.name;
-            let res = await this.$Api.getMenuList();
-            this.menuList = res.data.data;
-            this.$nextTick(() => {
-                this.dialogVisible = true;
-            })
-        },
-        //分配权限
-        async createPermission() {
-            let roleId = this.role.id;
-            let val = this.$refs.tree.getCheckedNodes();
-            let res = await this.$Api.createPermission(roleId, val);
-            if (res.data.code === 1) {
-                this.$message({
-                    showClose: true,
-                    message: res.data.msg,
-                    type: 'success'
-                });
-                this.dialogVisible = false;
-                this.getRoles();
-            } else {
-                this.$message.error(res.data.msg);
-            }
         },
         //获取所有的角色
         async getRoles() {
@@ -208,59 +103,6 @@ export default {
             } else {
                 this.$message.error(res.data.msg);
             }
-        },
-        setPermission(ev, data, val) {
-            if (ev) {
-                if (data.indexOf(val) == -1) {
-                    data.push(val);
-                }
-            } else {
-                if (data.indexOf(val) != -1) {
-                    for (var i = 0; i < data.length; i++) {
-                        if (data[i] == val) {
-                            data.splice(i, 1);
-                            break;
-                        }
-                    }
-                }
-            }
-        },
-
-        renderContent(h, { node, data, store }) {
-            function pdxuan(data, val) {
-                return data.includes(val);
-            }
-
-            return h('div', { attrs: { style: "display: flex;justify-content: space-between;width:100%;" } }, [
-                h('span', node.label),
-                h('span', [
-                    h('el-checkbox', {
-                        attrs: { label: 'add', checked: pdxuan(data.permission, 'add') }, on: {
-                            change: ($event) => {
-                                this.setPermission($event, data.permission, 'add');
-                                // return false;
-                            }
-                        }
-                    }, '新增'),
-                    h('el-checkbox', {
-                        attrs: { label: 'edit', checked: pdxuan(data.permission, 'edit') }, on: {
-                            change: ($event) => {
-                                this.setPermission($event, data.permission, 'edit');
-                                //return false;
-                            }
-                        }
-                    }, '修改'),
-                    h('el-checkbox', {
-                        attrs: { label: 'remove', checked: pdxuan(data.permission, 'remove') }, on: {
-                            change: ($event) => {
-                                this.setPermission($event, data.permission, 'remove');
-                                // return false;
-                            }
-                        }
-                    }, '删除')
-                ])
-            ])
-
         }
     }
 }

@@ -6,7 +6,7 @@
         <div class="search_toolbar">
             <el-form label-width="80px" style="width:200px">
                 <el-form-item label="角色名称">
-                    <el-input :disabled="true" readonly></el-input>
+                    <el-input v-model="role.id" :disabled="true" readonly></el-input>
                 </el-form-item>
             </el-form>
         </div>
@@ -14,7 +14,13 @@
             <div slot="header" class="clearfix">
                 <span>菜单分配（前端显示）</span>
             </div>
-            <el-tree :data="menuList" show-checkbox default-expand-all node-key="id" ref="tree" :props="defaultProps" :check-strictly="false" highlight-current :expand-on-click-node="false" :render-content="renderContent">
+            <el-tree :data="menuList" show-checkbox default-expand-all 
+                node-key="id" ref="tree" 
+                :props="defaultProps" 
+                :check-strictly="false" 
+                highlight-current 
+                :expand-on-click-node="false" >
+                <!-- :render-content="renderContent"> -->
             </el-tree>
         </el-card>
 
@@ -22,21 +28,20 @@
             <div slot="header" class="clearfix">
                 <span>资源分配（后台请求）</span>
             </div>
-            <el-row>
-                <el-col :md="8" v-for="(item,index) in permissionList" :key="index" ref="resource">
-                    <h4>{{item.name}}</h4>
-                    <div v-if="item.permission">
-                        <li v-for="(per,i) in item.permission" :key="i">
-                            <input type="checkbox" name="resource" :value="per.id">
-                            <label for="">{{per.name}}</label>
+            <el-row class="resource_wrapper">
+                <el-col :md="8" v-for="(item,index) in resourceList" :key="index" ref="resource">
+                    <h4 class="title">{{item.name}}</h4>
+                    <ul v-if="item.resource&&item.resource.length">
+                        <li v-for="(val,i) in item.resource" :key="i">
+                            <el-checkbox v-model="resourceIds" :label="val.id">{{val.name}}</el-checkbox>
                         </li>
-                    </div>
+                    </ul>
                 </el-col>
             </el-row>
         </el-card>
 
         <div style="text-align:center;margin-top:20px;">
-            <el-button type="primary" >提交</el-button>
+            <el-button type="primary" @click="submit">提交</el-button>
         </div>
     </section>
 </template>
@@ -49,7 +54,8 @@ export default {
                 id: null,
                 name: null,
             },
-            permissionList: [],
+            resourceList: [],
+            resourceIds:[],
             menuList: [],
             defaultProps: {
                 children: 'child',
@@ -58,7 +64,9 @@ export default {
         }
     },
     created() {
+        this.role.id = this.$route.query.id;
         this.getMenusPermission();
+        this.getRolePermission();
         this.getMenuList();
     },
     methods: {
@@ -66,31 +74,37 @@ export default {
             this.addFormVisible = true;
         },
         async getMenuList(){
-             let res = await this.$Api.getMenuList();
-             this.menuList = res.data.data;
+            let res = await this.$Api.getMenuList();
+            this.menuList =  res.data.data;
+        },
+        async getRolePermission(){
+            let roleId = this.role.id;
+            let res = await this.$Api.getRolePermission(roleId);
+            if(res.data.code==1){
+                this.resourceIds = res.data.resource;
+                this.$nextTick(()=>{
+                    this.$refs.tree.setCheckedKeys(res.data.menu.checkIds);
+                })
+            }else{
+                this.$message.error(res.data.msg);
+            }
         },
         async getMenusPermission() {
             let res = await this.$Api.getMenusPermission();
-            this.permissionList = res.data.data;
+            this.resourceList = res.data.data;
         },
-        async saveRolePermission() {
+        async submit() {
             let roleId = this.role.id;
             let menus = this.$refs.tree.getCheckedNodes();
-            let permissions = [];
-            document.querySelectorAll('input[name=resource]').forEach(ele => {
-                if (ele.checked) {
-                    permissions.push(ele.value)
-                }
-            });
-            let res = await this.$Api.saveRolePermission(roleId, menus, permissions);
+            let resource = this.resourceIds;
+            let res = await this.$Api.saveRolePermission(roleId, menus, resource);
             if (res.data.code === 1) {
                 this.$message({
                     showClose: true,
                     message: res.data.msg,
                     type: 'success'
                 });
-                this.dialogVisible = false,
-                    this.getRoles();
+                this.$router.push('/permission/role')
             } else {
                 this.$message.error(res.data.msg);
             }
@@ -154,5 +168,16 @@ export default {
 </script>
 
 <style scoped lang="less">
-
+.resource_wrapper{
+    h4{
+        margin-bottom: 15px;
+    }
+    li{
+        margin-bottom: 10px;
+        label{
+            font-size: 14px;
+            vertical-align: top;
+        }
+    }
+}
 </style>
