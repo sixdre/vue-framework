@@ -47,6 +47,10 @@ export default {
     getUsers() {
         return $http.get('/users');
     },
+     //创建用户
+    createUser(data) {
+        return $http.post('/users/createUser', data);
+    },
     //更新或分配用户的角色
     updateUserRole(userId, roleId) {
         return $http.post('/users/role', { userId, roleId });

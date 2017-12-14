@@ -2,6 +2,8 @@ import axios from 'axios'
 import $config from '@/config/env'
 import Auth from './auth'
 import router from '@/router'
+import { Message  } from 'element-ui'
+
 // axios 配置
 axios.defaults.timeout = 5000
 axios.defaults.baseURL = $config.baseUrl;
@@ -29,7 +31,8 @@ axios.interceptors.response.use(
 			switch (error.response.status) {
 				case 401:
 					// 401 清除token信息并跳转到登录页面
-					Auth.logout()
+					Auth.logout();
+					Message.error('请重新登录');
 					router.replace({
 						path: 'login',
 						query: {
@@ -38,7 +41,7 @@ axios.interceptors.response.use(
 					})
 					break;
 				case 403:
-					alert('抱歉，您没有权限访问,请与系统管理员联系!');
+					Message.error('抱歉，您没有权限访问,请与系统管理员联系!')
 					break;
 			}
 		}

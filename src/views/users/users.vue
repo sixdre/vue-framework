@@ -3,6 +3,13 @@
 		<div class="section_breadcrumb">
 			<strong class="title">用户列表</strong>
 		</div>
+		<div class="search_toolbar">
+            <el-form :inline="true" class="demo-form-inline">
+                <el-form-item>
+                    <el-button type="primary" size="small" @click="handleAddUserDialog">新增</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
 		<div class="table_container">
 			<el-table :data="users" style="width: 100%;">
 				<el-table-column type="index" width="60" label="排序">
@@ -37,6 +44,28 @@
 		</el-col>
 
 
+		<!--新增用户界面弹框-->
+        <el-dialog :visible.sync="addFormVisible" :close-on-click-modal="false">
+            <el-form :model="userForm" :rules="rules" label-width="80px" ref="userForm">
+                <el-form-item label="用户名称" prop="username">
+                    <el-input v-model="userForm.username" auto-complete="off"></el-input>
+                </el-form-item>
+				<el-form-item label="密码" prop="password">
+                    <el-input v-model="userForm.password" auto-complete="off"></el-input>
+                </el-form-item>
+				<el-form-item label="角色分类" prop="roleId">
+					<el-radio-group v-model="userForm.roleId">
+						<el-radio v-for="role in roles" :label="role.id" :key="role.name">{{role.name}}</el-radio>
+					</el-radio-group>
+				</el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click.native="addFormVisible = false">取消</el-button>
+                <el-button type="primary" @click.native="addUser">提交</el-button>
+            </div>
+        </el-dialog>
+
+
         <!--分配权限弹框  -->
         <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false">
 			<el-form :model="form" label-width="80px"  ref="form">
@@ -68,9 +97,26 @@ export default{
 				userId:'',
 				roleId:''
 			},
-            dialogVisible:false,
+			userForm:{
+				username:'',
+				password:'',
+				roleId:''
+			},
+			dialogVisible:false,
+			addFormVisible:false,
 			users:[],
-			roles:[]
+			roles:[],
+			rules: {
+				username: [
+					{ required: true, message: '请输入用户名称', trigger: 'blur' }
+				],
+				password: [
+					{ required: true, message: '请输入密码', trigger: 'blur' }
+				],
+				roleId: [
+					{ required: true, message: '请选择角色分类', trigger: 'change' }
+				]
+			}
 		}
 	},
 	computed:{
@@ -87,6 +133,9 @@ export default{
 		this.getRoles();
 	},
 	methods:{
+		handleAddUserDialog(){
+			this.addFormVisible = true;
+		},
 		handleRoleDialog(row){
 			this.form.username=row.username;
 			this.form.userId=row.id;
@@ -95,7 +144,7 @@ export default{
 		},
         //获取用户列表
         async getUsers(){
-		   let res = await this.$Api.getUsers();
+		    let res = await this.$Api.getUsers();
             if(res.data.code===1){
                 this.users = res.data.data;
             }else{
@@ -124,8 +173,29 @@ export default{
             }else{
                 this.$message.error(res.data.msg);
             }
+		},
+		//创建用户
+		addUser(){
+			this.$refs['userForm'].validate(async (valid) => {
+				if (valid) {
+					let res = await this.$Api.createUser(this.userForm);
+					if(res.data.code===1){
+						this.$message({
+							showClose: true,
+							message: res.data.msg,
+							type: 'success'
+						});
+						this.getUsers();
+						this.addFormVisible = false;
+					}else{
+						this.$message.error(res.data.msg);
+					}
+				}else{
+					console.log('error submit!!');
+					return false;
+				}
+			})
 		}
-       
 	}
 }
 
