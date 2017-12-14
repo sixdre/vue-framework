@@ -45,7 +45,6 @@ axios.interceptors.response.use(
 					break;
 			}
 		}
-		console.log(error)
 		return Promise.reject(error)
 	}
 )

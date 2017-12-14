@@ -95,7 +95,7 @@ export default {
         },
         async submit() {
             let roleId = this.role.id;
-            let menus = this.$refs.tree.getCheckedNodes();
+            let menus = this.$refs.tree.getCheckedKeys();
             let resource = this.resourceIds;
             let res = await this.$Api.saveRolePermission(roleId, menus, resource);
             if (res.data.code === 1) {
