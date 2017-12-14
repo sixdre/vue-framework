@@ -10,7 +10,10 @@ export default {
     createNewPermission(data) {
         return $http.post('/api/permission/createPermission', data);
     },
-    getNewPermission() {
+    getCurrentUserPermission() {
+        return $http.get('/api/permission');
+    },
+    getPermissionList() {
         return $http.get('/api/permission/getPermission');
     },
     getMenusPermission() {

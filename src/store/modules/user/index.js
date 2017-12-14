@@ -2,11 +2,12 @@ import $Api from '@/api/api'
 import Auth from '@/services/auth'
 import { Message } from 'element-ui';
 
+
 const state = {
     // uid
     uid: '',
     // 用户名
-    name: '',
+    username:Auth.getUserName(),
     // token
     token: '',
     // 角色分组
@@ -26,6 +27,10 @@ const mutations = {
         }
         state.token = data
     },
+    setName: (state, data) => {
+        Auth.setUserName(data);
+        state.username = data
+    },
     setRole: (state, data) => {
         Auth.setRole(data);
         state.role = data
@@ -38,6 +43,7 @@ const actions = {
         return new Promise((resolve) => {
             commit('setToken', '')
             commit('setRole', '')
+            commit('setName', '')
             commit('permission/setList', [], { root: true })    // 调用permission模块的 mutations
             resolve()
         })

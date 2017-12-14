@@ -112,7 +112,7 @@ export default{
 		},
 		async getPermissionList(){
 			 try{
-                let res = await this.$Api.getNewPermission()
+                let res = await this.$Api.getPermissionList()
                 this.permissionList = res.data.data;
             }catch(err){
 

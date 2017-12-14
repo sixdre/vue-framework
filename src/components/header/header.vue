@@ -1,7 +1,8 @@
 <template>
     <div class="app-header">
         这是头部
-        当前用户角色ID:{{role}}
+        当前用户:{{username}} 
+        角色:{{role}}
         <el-button type="text" @click="logout()">退出</el-button>
     </div>
 </template>
@@ -12,7 +13,8 @@ export default {
 	computed: {
 		// 使用对象展开运算符将 getter 混入 computed 对象中
 		...mapGetters([
-			'role'
+            'role',
+            'username'
 		])
     },
     methods:{

@@ -78,7 +78,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
     // NProgress.start();
-    if (Auth.getToken() && Auth.getRole()) {
+    if (Auth.getToken()) {
         if (to.path === '/login') {     //已登录不可以再次回到登录页面，再次登录需要先退出系统
             router.replace('/')
         } else {

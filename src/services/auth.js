@@ -4,11 +4,17 @@ export default {
   login (data) {
     sessionStorage.setItem(setting.userToken, data);
   },
+  setUserName(data) {
+     sessionStorage.setItem(setting.userName, data)
+  },
+  getUserName() {
+     return sessionStorage.getItem(setting.userName)
+  },
   setRole(data) {
-    sessionStorage.setItem('role', data)
+    sessionStorage.setItem(setting.role, data)
   },
   getRole() {
-    return sessionStorage.getItem('role')
+    return sessionStorage.getItem(setting.role)
   },
   authenticated () {
     var t = sessionStorage.getItem(setting.userToken)

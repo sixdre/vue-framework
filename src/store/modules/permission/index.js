@@ -26,10 +26,10 @@ const actions = {
         return new Promise((resolve, reject) =>{
             // let uid = rootState.uid
             let roleId = Auth.getRole();
-            Api.getRolePermission(roleId).then((res) => {
+            Api.getCurrentUserPermission().then((res) => {
                 // 存储权限列表
-                commit('setList', res.data.menu.list)
-                resolve(res.data.menu.list)
+                commit('setList', res.data.data)
+                resolve(res.data.data)
             }).catch(() => {
                 reject()
             })
