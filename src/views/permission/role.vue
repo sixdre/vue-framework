@@ -17,13 +17,23 @@
                 <el-table-column prop="name" label="角色名称">
                 </el-table-column>
                 <el-table-column prop="createdAt" label="创建时间">
+                    <template slot-scope="scope">
+						{{scope.row.createdAt | moment}}
+					</template>
                 </el-table-column>
                 <el-table-column prop="updatedAt" label="更新时间">
+                    <template slot-scope="scope">
+						{{scope.row.updatedAt | moment}}
+					</template>
                 </el-table-column>
                 <el-table-column label="操作" width="150">
                     <template slot-scope="scope" v-if="!scope.row.super">
-                        <router-link tag="button" v-if="!scope.row.permission" :to="{path: '/permission/allot',query:{id:scope.row.id}}">分配权限</router-link>
-                        <router-link tag="button" v-else :to="{path: '/permission/allot',query:{id:scope.row.id}}">修改权限</router-link>
+                        <el-button size="small" type="success" v-if="!scope.row.permission">
+                            <router-link style="color:#fff;" :to="{path: '/permission/allot',query:{id:scope.row.id}}">分配权限</router-link>
+                        </el-button>
+                        <el-button size="small" type="warning" v-else>
+                            <router-link style="color:#fff;" :to="{path: '/permission/allot',query:{id:scope.row.id}}">修改权限</router-link>
+                        </el-button>
                         <!-- <el-button size="small" v-if="scope.row.permission.length" @click="handlePermissionEditDialog(scope.row)">修改权限</el-button> -->
                     </template>
                 </el-table-column>

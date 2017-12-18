@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<el-switch></el-switch>
+		welcome to back!
 	</div>
 </template>
 

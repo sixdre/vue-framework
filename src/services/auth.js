@@ -31,6 +31,8 @@ export default {
     return sessionStorage.getItem(setting.uid)
   },
   logout () {
+    sessionStorage.removeItem(setting.userName)
+    sessionStorage.removeItem(setting.role)
     sessionStorage.removeItem(setting.userToken)
   }
 }

@@ -7,7 +7,7 @@
 			<el-form :inline="true" class="demo-form-inline">
 				<el-form-item>
 					<el-button type="primary" size="small" @click="handleAddDialog">新增</el-button>
-					<el-button type="primary" size="small" >批量删除</el-button>
+					<!-- <el-button type="primary" size="small" >批量删除</el-button> -->
 				</el-form-item>
 			</el-form>
 		</div>
@@ -27,15 +27,28 @@
 						{{scope.row.tagName}}
 					</template>
 				</el-table-column>
+				<el-table-column prop="type" label="请求类型">
+				</el-table-column>
 				<el-table-column label="操作" width="150">
 					<template slot-scope="scope">
-						<el-button size="mini" >编辑</el-button>
-						<el-button size="mini" type="danger" >删除</el-button>
+						<!-- <el-button size="mini" >编辑</el-button> -->
+						<!-- <el-button size="mini" type="danger" >删除</el-button> -->
 					</template>
 				</el-table-column>
 			</el-table>
 		</div>
 
+
+		<!--工具条-->
+		<el-col :span="24" class="toolbar">
+			<el-pagination 
+				 layout="prev, pager, next"
+				 background
+				 :page-size="pageParams.limit" 
+				 @current-change="pageChange" 
+				 :total="pageParams.count" style="float:right;">
+			</el-pagination>
+		</el-col>	
 
 		<!--新增界面弹框-->
 		 <el-dialog :visible.sync="addFormVisible" :close-on-click-modal="false">
@@ -82,6 +95,11 @@ export default{
 				type:[],
 				tag:''
 			},
+			pageParams:{
+				limit:8,
+				page:1,
+				count:null,
+			},
 			httpTypes:['get','post','delete','put'],
             addFormVisible:false,
 			permissionList:[],
@@ -112,11 +130,16 @@ export default{
 		},
 		async getPermissionList(){
 			 try{
-                let res = await this.$Api.getPermissionList()
-                this.permissionList = res.data.data;
+                let res = await this.$Api.getPermissionList(this.pageParams);
+				this.permissionList = res.data.data;
+				this.pageParams.count = res.data.count;
             }catch(err){
 
             }
+		},
+		pageChange(val){
+			this.pageParams.page = val;
+			this.getPermissionList();
 		},
 		async getMenus(){
             try{
@@ -131,7 +154,7 @@ export default{
 			this.$refs[formName].validate(async (valid) => {
 				if (valid) {
 					try{
-						let res = await this.$Api.createNewPermission(this.form);
+						let res = await this.$Api.createPermission(this.form);
 						if(res.data.code===1){
 							this.$message({
 								showClose: true,

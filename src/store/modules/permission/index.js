@@ -26,7 +26,7 @@ const actions = {
         return new Promise((resolve, reject) =>{
             // let uid = rootState.uid
             let roleId = Auth.getRole();
-            Api.getCurrentUserPermission().then((res) => {
+            Api.getUserInfo().then((res) => {
                 // 存储权限列表
                 commit('setList', res.data.data)
                 resolve(res.data.data)

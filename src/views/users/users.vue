@@ -25,8 +25,14 @@
 				<el-table-column prop="roleName" label="角色名称">
 				</el-table-column>
 				<el-table-column prop="createdAt" label="创建时间">
+					<template slot-scope="scope">
+						{{scope.row.createdAt | moment}}
+					</template>
 				</el-table-column>
 				<el-table-column prop="updatedAt" label="更新时间">
+					<template slot-scope="scope">
+						{{scope.row.updatedAt | moment}}
+					</template>
 				</el-table-column>
 				<el-table-column label="操作" width="150">
 					<template slot-scope="scope" v-if="!scope.row.roleSuper">

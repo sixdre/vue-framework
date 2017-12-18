@@ -7,15 +7,19 @@ export default {
     login(username, password) {
         return $http.post('/api/login', { username: username, password: password });
     },
-    createNewPermission(data) {
+    //获取登录用户信息
+    getUserInfo() {
+        return $http.get('/api/users/info');
+    },
+    //创建权限
+    createPermission(data) {
         return $http.post('/api/permission/createPermission', data);
     },
-    getCurrentUserPermission() {
-        return $http.get('/api/permission');
+    //获取权限列表
+    getPermissionList({page=1,limit=5}) {
+        return $http.get('/api/permission/getPermission',{params:{page,limit}});
     },
-    getPermissionList() {
-        return $http.get('/api/permission/getPermission');
-    },
+    //根据前端菜单获取权限分类
     getMenusPermission() {
          return $http.get('/api/permission/getMenusPermission');
     },
@@ -43,7 +47,7 @@ export default {
     },
      //创建用户
     createUser(data) {
-        return $http.post('/api/users/createUser', data);
+        return $http.post('/api/users', data);
     },
     //更新或分配用户的角色
     updateUserRole(userId, roleId) {

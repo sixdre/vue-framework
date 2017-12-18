@@ -55,7 +55,15 @@ function routerMatch(permission, asyncRouter) {
 var routes = [{
     path: '/',
     name: 'index',
-    component: r => require.ensure([], () => r(require('@/layouts/layout')))
+     redirect: '/welcome',
+    component: r => require.ensure([], () => r(require('@/layouts/layout'))),
+    children: [
+        {
+            path: '/welcome',
+            name: 'welcome',
+            component: r => require.ensure([], () => r(require('@/views/main')), 'main'),
+        }
+    ]
 }, {
     path: '/login',
     name: 'login',

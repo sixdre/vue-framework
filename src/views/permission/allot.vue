@@ -29,7 +29,7 @@
                 <span>资源分配（后台请求）</span>
             </div>
             <el-row class="resource_wrapper">
-                <el-col :md="8" v-for="(item,index) in resourceList" :key="index" ref="resource">
+                <el-col :span="8" v-for="(item,index) in resourceList" :key="index" ref="resource">
                     <h4 class="title">{{item.name}}</h4>
                     <ul v-if="item.resource&&item.resource.length">
                         <li v-for="(val,i) in item.resource" :key="i">
