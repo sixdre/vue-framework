@@ -60,9 +60,9 @@
 					<el-input v-model="form.resource" auto-complete="off"></el-input>
 				</el-form-item>
 				<el-form-item label="请求形式" prop="type">
-					<el-checkbox-group v-model="form.type">
-						<el-checkbox v-for="item in httpTypes" :key="item" :label="item"></el-checkbox>
-					</el-checkbox-group>
+					<el-radio-group v-model="form.type">
+						<el-radio v-for="item in httpTypes" :key="item" :label="item"></el-radio>
+					</el-radio-group>
 				</el-form-item>
 				<el-form-item label="权限分类" prop="tag">
 					<el-select v-model="form.tag" placeholder="请选择分类">
@@ -92,7 +92,7 @@ export default{
 			form:{
 				name:'',
 				resource:'',
-				type:[],
+				type:'',
 				tag:''
 			},
 			pageParams:{
@@ -112,7 +112,7 @@ export default{
 					{ required: true, message: '请输入请求地址', trigger: 'blur' }
 				],
 				type: [
-					{ type:'array', required: true, message: '请选择请求类型', trigger: 'change'}
+					{ required: true, message: '请选择请求类型', trigger: 'change'}
 				],
 				tag: [
 					{ type:'number', required: true, message: '请选择所属分类', trigger: 'change'}
