@@ -28,13 +28,12 @@
                 </el-table-column>
                 <el-table-column label="操作" width="150">
                     <template slot-scope="scope" v-if="!scope.row.super">
-                        <router-link tag="el-button" style="padding:9px 15px;font-size:12px" v-if="!scope.row.permission" :to="{path: '/permission/allot',query:{id:scope.row.id}}">分配权限</router-link>
+                        <router-link tag="el-button" style="padding:9px 15px;font-size:12px" v-if="!scope.row.menuIds" :to="{path: '/permission/allot',query:{id:scope.row.id}}">分配权限</router-link>
                         <router-link tag="el-button" style="padding:9px 15px;font-size:12px" v-else :to="{path: '/permission/allot',query:{id:scope.row.id}}">修改权限</router-link>
                     </template>
                 </el-table-column>
             </el-table>
         </div>
-
 
         <!--新增界面弹框-->
         <el-dialog :visible.sync="addFormVisible" :close-on-click-modal="false">

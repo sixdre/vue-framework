@@ -16,12 +16,8 @@ export default {
         return $http.post('/api/permission/createPermission', data);
     },
     //获取权限列表
-    getPermissionList({page=1,limit=5}) {
-        return $http.get('/api/permission/getPermission',{params:{page,limit}});
-    },
-    //根据前端菜单获取权限分类
-    getMenusPermission() {
-         return $http.get('/api/permission/getMenusPermission');
+    getPermissionList({page=1,limit=5,group=0}) {
+        return $http.get('/api/permission/getPermission',{params:{page,limit,group}});
     },
     saveRolePermission( roleId, menus,resource) {
          return $http.post('/api/permission/saveRolePermission', { roleId, menus,resource});
@@ -37,13 +33,13 @@ export default {
     createRole(name) {
         return $http.post('/api/permission/createRole', { name });
     },
-    //获取角色
+    //获取角色列表
     getRoles() {
         return $http.get('/api/permission/roles');
     },
-    //获取用户
-    getUsers() {
-        return $http.get('/api/users');
+    //获取用户列表
+    getUsers({ page = 1, limit = 5 }) {
+        return $http.get('/api/users',{params:{page,limit}});
     },
      //创建用户
     createUser(data) {

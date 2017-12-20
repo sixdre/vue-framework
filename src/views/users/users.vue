@@ -45,10 +45,14 @@
 
 		<!--工具条-->
 		<el-col :span="24" class="toolbar">
-			<el-pagination layout="prev, pager, next" :page-size="20" :total="30" style="float:right;">
+			<el-pagination 
+				 layout="prev, pager, next"
+				 background
+				 :page-size="pageParams.limit" 
+				 @current-change="pageChange" 
+				 :total="pageParams.count" style="float:right;">
 			</el-pagination>
-		</el-col>
-
+		</el-col>	
 
 		<!--新增用户界面弹框-->
         <el-dialog :visible.sync="addFormVisible" :close-on-click-modal="false">
@@ -71,7 +75,6 @@
             </div>
         </el-dialog>
 
-
         <!--分配权限弹框  -->
         <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false">
 			<el-form :model="form" label-width="80px"  ref="form">
@@ -90,7 +93,6 @@
 			</div>
 		</el-dialog>
 
-	
 	</section>
 </template>
 
@@ -107,6 +109,11 @@ export default{
 				username:'',
 				password:'',
 				roleId:''
+			},
+			pageParams:{
+				limit:8,
+				page:1,
+				count:null,
 			},
 			dialogVisible:false,
 			addFormVisible:false,
@@ -148,11 +155,16 @@ export default{
 			this.form.roleId=row.roleId;
 			this.dialogVisible = true;
 		},
+		pageChange(val){
+			this.pageParams.page = val;
+			this.getUsers();
+		},
         //获取用户列表
         async getUsers(){
-		    let res = await this.$Api.getUsers();
+		    let res = await this.$Api.getUsers(this.pageParams);
             if(res.data.code===1){
-                this.users = res.data.data;
+				this.users = res.data.data;
+				this.pageParams.count = res.data.count;
             }else{
                 this.$message.error(res.data.msg);
             }

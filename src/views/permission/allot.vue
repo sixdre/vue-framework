@@ -20,7 +20,6 @@
                 :check-strictly="false" 
                 highlight-current 
                 :expand-on-click-node="false" >
-                <!-- :render-content="renderContent"> -->
             </el-tree>
         </el-card>
 
@@ -65,7 +64,7 @@ export default {
     },
     created() {
         this.role.id = this.$route.query.id;
-        this.getMenusPermission();
+        this.getPermissionList();
         this.getRolePermission();
         this.getMenuList();
     },
@@ -89,8 +88,9 @@ export default {
                 this.$message.error(res.data.msg);
             }
         },
-        async getMenusPermission() {
-            let res = await this.$Api.getMenusPermission();
+        async getPermissionList() {
+            let group = 1;
+            let res = await this.$Api.getPermissionList({group});
             this.resourceList = res.data.data;
         },
         async submit() {
@@ -108,59 +108,6 @@ export default {
             } else {
                 this.$message.error(res.data.msg);
             }
-        },
-        setPermission(ev, data, val) {
-            if (ev) {
-                if (data.indexOf(val) == -1) {
-                    data.push(val);
-                }
-            } else {
-                if (data.indexOf(val) != -1) {
-                    for (var i = 0; i < data.length; i++) {
-                        if (data[i] == val) {
-                            data.splice(i, 1);
-                            break;
-                        }
-                    }
-                }
-            }
-        },
-
-        renderContent(h, { node, data, store }) {
-            function pdxuan(data, val) {
-                return data.includes(val);
-            }
-
-            return h('div', { attrs: { style: "display: flex;justify-content: space-between;width:100%;" } }, [
-                h('span', node.label),
-                h('span', [
-                    h('el-checkbox', {
-                        attrs: { label: 'add', checked: pdxuan(data.permission, 'add') }, on: {
-                            change: ($event) => {
-                                this.setPermission($event, data.permission, 'add');
-                                // return false;
-                            }
-                        }
-                    }, '新增'),
-                    h('el-checkbox', {
-                        attrs: { label: 'edit', checked: pdxuan(data.permission, 'edit') }, on: {
-                            change: ($event) => {
-                                this.setPermission($event, data.permission, 'edit');
-                                //return false;
-                            }
-                        }
-                    }, '修改'),
-                    h('el-checkbox', {
-                        attrs: { label: 'remove', checked: pdxuan(data.permission, 'remove') }, on: {
-                            change: ($event) => {
-                                this.setPermission($event, data.permission, 'remove');
-                                // return false;
-                            }
-                        }
-                    }, '删除')
-                ])
-            ])
-
         }
     }
 }
