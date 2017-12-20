@@ -19,9 +19,11 @@ export default {
     getPermissionList({page=1,limit=5,group=0}) {
         return $http.get('/api/permission/getPermission',{params:{page,limit,group}});
     },
+    //保存角色权限
     saveRolePermission( roleId, menus,resource) {
          return $http.post('/api/permission/saveRolePermission', { roleId, menus,resource});
     },
+    //获取角色的权限
     getRolePermission(roleId) {
          return $http.get('/api/permission/getPermissionByRoleId',{params:{roleId}});
     },
@@ -41,9 +43,13 @@ export default {
     getUsers({ page = 1, limit = 5 }) {
         return $http.get('/api/users',{params:{page,limit}});
     },
-     //创建用户
+    //创建用户
     createUser(data) {
         return $http.post('/api/users', data);
+    },
+    //删除用户
+    removeUser(id) {
+        return $http.delete('/api/users/'+id);
     },
     //更新或分配用户的角色
     updateUserRole(userId, roleId) {

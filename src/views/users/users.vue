@@ -11,7 +11,9 @@
             </el-form>
         </div>
 		<div class="table_container">
-			<el-table :data="users" style="width: 100%;">
+			<el-table :data="users" style="width: 100%;" @selection-change="selsChange">
+				<el-table-column type="selection" width="55" >
+				</el-table-column>
 				<el-table-column type="index" width="60" label="排序">
 				</el-table-column>
 				<el-table-column prop="username" label="用户名称">
@@ -34,10 +36,11 @@
 						{{scope.row.updatedAt | moment}}
 					</template>
 				</el-table-column>
-				<el-table-column label="操作" width="150">
+				<el-table-column label="操作" >
 					<template slot-scope="scope" v-if="!scope.row.roleSuper">
 						<el-button size="small" v-if="!scope.row.roleId" @click="handleRoleDialog(scope.row)">分配角色</el-button>
                         <el-button size="small" v-else @click="handleRoleDialog(scope.row)">修改角色</el-button>
+						<el-button size="small" type="danger" @click="removeUser(scope.row.id)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -45,8 +48,9 @@
 
 		<!--工具条-->
 		<el-col :span="24" class="toolbar">
+			<el-button size="small" @click="removeUserMulti" :disabled="!selectUsers.length">批量删除</el-button>
 			<el-pagination 
-				 layout="prev, pager, next"
+				 layout="total, prev, pager, next"
 				 background
 				 :page-size="pageParams.limit" 
 				 @current-change="pageChange" 
@@ -71,7 +75,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click.native="addFormVisible = false">取消</el-button>
-                <el-button type="primary" @click.native="addUser">提交</el-button>
+                <el-button type="primary" @click.native="createUser">提交</el-button>
             </div>
         </el-dialog>
 
@@ -129,7 +133,8 @@ export default{
 				roleId: [
 					{ required: true, message: '请选择角色分类' }
 				]
-			}
+			},
+			selectUsers:[]
 		}
 	},
 	computed:{
@@ -158,6 +163,9 @@ export default{
 		pageChange(val){
 			this.pageParams.page = val;
 			this.getUsers();
+		},
+		selsChange(val) {
+			this.selectUsers = val;
 		},
         //获取用户列表
         async getUsers(){
@@ -192,8 +200,33 @@ export default{
                 this.$message.error(res.data.msg);
             }
 		},
+		//删除用户
+		removeUser(id){
+			this.$confirm('确定删除吗?', '提示', {
+				type: 'warning'
+			}).then(async () => {
+				let res = await this.$Api.removeUser(id);
+				if(res.data.code===1){
+					this.$message({
+						showClose: true,
+						message: res.data.msg,
+						type: 'success'
+					});
+					this.getUsers();
+				}else{
+					this.$message.error(res.data.msg);
+				}
+			}).catch(() => {
+
+			});
+		},
+		//批量删除用户
+		removeUserMulti(){
+			let ids = this.selectUsers.map(item => item.id).toString();
+			this.removeUser(ids);
+		},
 		//创建用户
-		addUser(){
+		createUser(){
 			this.$refs['userForm'].validate(async (valid) => {
 				if (valid) {
 					let res = await this.$Api.createUser(this.userForm);

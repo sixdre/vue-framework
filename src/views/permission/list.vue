@@ -14,8 +14,6 @@
 
         <div class="table_container">
 			<el-table :data="permissionList"  style="width: 100%;">
-				<el-table-column type="selection" width="55">
-				</el-table-column>
 				<el-table-column type="index" width="60" label="排序">
 				</el-table-column>
 				<el-table-column prop="name" label="权限名">
@@ -42,7 +40,7 @@
 		<!--工具条-->
 		<el-col :span="24" class="toolbar">
 			<el-pagination 
-				 layout="prev, pager, next"
+				 layout="total, prev, pager, next"
 				 background
 				 :page-size="pageParams.limit" 
 				 @current-change="pageChange" 
@@ -96,7 +94,7 @@ export default{
 				tag:''
 			},
 			pageParams:{
-				limit:8,
+				limit:5,
 				page:1,
 				count:null,
 			},

@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import NProgress from 'nprogress'
-// import 'nprogress/nprogress.css'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 import store from '@/store'
 import Auth from '@/services/auth'
 import asyncRouter from './asyncRouter'
 
 
-// NProgress.configure({ showSpinner: false });
+NProgress.configure({ showSpinner: true });
 
 Vue.use(Router)
 
@@ -85,8 +85,8 @@ const router = new Router({
 
 
 router.beforeEach((to, from, next) => {
-    // NProgress.start();
-    if (Auth.getToken()) {
+    NProgress.start();
+    if (Auth.authenticated()) {
         if (to.path === '/login') {     //已登录不可以再次回到登录页面，再次登录需要先退出系统
             router.replace('/')
         } else {
@@ -123,15 +123,15 @@ router.beforeEach((to, from, next) => {
             next()
         } else {
             router.replace('/login')
-            // NProgress.done()
+            NProgress.done()
         }
     }
 
 })
 
-// router.afterEach(() => {
-//     NProgress.done(); 
-// })
+router.afterEach(() => {
+    NProgress.done(); 
+})
 
 
 export default router
