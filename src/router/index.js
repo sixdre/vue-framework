@@ -91,7 +91,7 @@ router.beforeEach((to, from, next) => {
             router.replace('/')
         } else {
             if (store.state.permission.list.length === 0) { //页面刷新需要重新请求
-                store.dispatch('permission/getPermission').then(res => {
+                store.dispatch('user/getUserInfo').then(res => {
                     // 匹配并生成需要添加的路由对象
                     routerMatch(res, asyncRouter).then(data => {
                         if (!data || !data.length) {

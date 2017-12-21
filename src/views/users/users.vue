@@ -38,9 +38,9 @@
 				</el-table-column>
 				<el-table-column label="操作" >
 					<template slot-scope="scope" v-if="!scope.row.roleSuper">
-						<el-button size="small" v-if="!scope.row.roleId" @click="handleRoleDialog(scope.row)">分配角色</el-button>
-                        <el-button size="small" v-else @click="handleRoleDialog(scope.row)">修改角色</el-button>
-						<el-button size="small" type="danger" @click="removeUser(scope.row.id)">删除</el-button>
+						<el-button size="small" plain v-if="!scope.row.roleId" @click="handleRoleDialog(scope.row)">分配角色</el-button>
+                        <el-button size="small" plain v-else @click="handleRoleDialog(scope.row)">修改角色</el-button>
+						<el-button size="small" type="danger" plain @click="removeUser(scope.row.id)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>

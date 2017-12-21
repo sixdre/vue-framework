@@ -1,19 +1,17 @@
-import $Api from '@/api/api'
+import Api from '@/api/api'
 import Auth from '@/services/auth'
 import { Message } from 'element-ui';
 
 
 const state = {
-    // uid
-    uid: '',
     // 用户名
     username:Auth.getUserName(),
     // token
-    token: '',
+    token: Auth.getToken(),
     // 角色分组
-    role: Auth.getRole()
+    role: Auth.getRole(),
     // 头像
-    // avatar: ''
+    avatar: '../../../static/avatar.jpeg'
 }
 
 const getters = {}
@@ -46,6 +44,18 @@ const actions = {
             commit('setName', '')
             commit('permission/setList', [], { root: true })    // 调用permission模块的 mutations
             resolve()
+        })
+    },
+    //获取当前登录用户信息
+    getUserInfo({ commit }) {
+        return new Promise((resolve, reject) =>{
+            Api.getUserInfo().then((res) => {
+                // 存储权限列表
+                commit('permission/setList', res.data.menuList, { root: true });
+                resolve(res.data.menuList)
+            }).catch(() => {
+                reject()
+            })
         })
     }
 }

@@ -1,5 +1,6 @@
 <template>
     <el-row class="app-header">
+        <span>{{date}}</span>
         <el-col :span="4" class="userinfo">
             <el-dropdown trigger="hover">
                 <span class="el-dropdown-link userinfo-inner"><img :src="avatar"/> {{username}} </span>
@@ -14,18 +15,30 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import moment from 'moment'
 export default {
     data(){
         return {
-            avatar:'../../../static/avatar.jpeg'
+           date:null
         }
     },
 	computed: {
 		// 使用对象展开运算符将 getter 混入 computed 对象中
 		...mapGetters([
             'role',
-            'username'
-		])
+            'username',
+            'avatar'
+        ]),
+        
+        // avatar(){
+        //     // return '../../../static/avatar.jpeg'
+        //     return this.$store.state.user.avatar
+        // }
+    },
+    created(){
+        setInterval(()=>{
+            this.date = moment().format('YYYY-MM-DD HH:mm:ss');
+        },1000)    
     },
     methods:{
         logout(){
