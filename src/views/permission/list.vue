@@ -29,7 +29,7 @@
 				</el-table-column>
 				<el-table-column label="操作" width="150">
 					<template slot-scope="scope">
-						<!-- <el-button size="mini" >编辑</el-button> -->
+						 <el-button size="mini" @click="handleEditDialog(scope.row)">编辑</el-button> 
 						<!-- <el-button size="mini" type="danger" >删除</el-button> -->
 					</template>
 				</el-table-column>
@@ -50,7 +50,7 @@
 
 		<!--新增界面弹框-->
 		 <el-dialog :visible.sync="addFormVisible" :close-on-click-modal="false">
-			<el-form :model="form" :rules="rules" label-width="80px"  :ref="formName">
+			<el-form :model="form" :rules="rules" label-width="80px"  ref="form">
 				<el-form-item label="权限名" prop="name">
 					<el-input v-model="form.name" auto-complete="off"></el-input>
 				</el-form-item>
@@ -86,7 +86,6 @@
 export default{
 	data(){
 		return {
-			formName:'form',
 			form:{
 				name:'',
 				resource:'',
@@ -124,10 +123,24 @@ export default{
 	},
 	methods:{
         handleAddDialog(){
-            this.addFormVisible = true;
+			this.addFormVisible = true;
+			this.form={
+				name:'',
+				resource:'',
+				type:'',
+				tag:''
+			}
+		},
+		handleEditDialog(row){
+			this.form.id = row.id;
+			this.form.name = row.name;
+			this.form.resource = row.resource;
+			this.form.type = row.type;
+			this.form.tag = row.tag;
+			this.addFormVisible = true;
 		},
 		async getPermissionList(){
-			 try{
+			try{
                 let res = await this.$Api.getPermissionList(this.pageParams);
 				this.permissionList = res.data.data;
 				this.pageParams.count = res.data.count;
@@ -148,8 +161,7 @@ export default{
             }
         },
 		addSubmit(){
-			let formName = this.formName;
-			this.$refs[formName].validate(async (valid) => {
+			this.$refs['form'].validate(async (valid) => {
 				if (valid) {
 					try{
 						let res = await this.$Api.createPermission(this.form);
