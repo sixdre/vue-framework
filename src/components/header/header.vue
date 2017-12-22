@@ -1,6 +1,6 @@
 <template>
     <el-row class="app-header">
-        <span>{{date}}</span>
+        <span style="color:#fff;">{{date}}</span>
         <el-col :span="4" class="userinfo">
             <el-dropdown trigger="hover">
                 <span class="el-dropdown-link userinfo-inner"><img :src="avatar"/> {{username}} </span>

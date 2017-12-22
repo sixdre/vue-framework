@@ -72,6 +72,10 @@ var routes = [{
     path: '/404',
     name: 'notFound',
     component: r => require.ensure([], () => r(require('@/views/auth/404')))
+}, {
+    path: '/403',
+    name: 'forbidden',
+    component: r => require.ensure([], () => r(require('@/views/auth/403')))
 }]
 
 

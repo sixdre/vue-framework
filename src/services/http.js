@@ -23,7 +23,6 @@ axios.interceptors.request.use(
 )
 axios.interceptors.response.use(
 	response => {
-
 		return response
 	},
 	error => {
@@ -34,21 +33,26 @@ axios.interceptors.response.use(
 					Auth.logout();
 					Message.error('请重新登录');
 					router.replace({
-						path: 'login',
+						path: '/login',
 						query: {
 							redirect: router.currentRoute.fullPath
 						}
 					})
 					break;
 				case 403:
+					// 403 用户没有权限访问
+					router.replace({
+						path: '/403',
+						query: {
+							redirect: router.currentRoute.fullPath
+						}
+					})	
 					Message.error('抱歉，您没有权限访问,请与系统管理员联系!')
 					break;
 				default:
 					Message.error('请求失败，服务器错误!')
 					break;
 			}
-			
-
 		}
 		return Promise.reject(error)
 	}

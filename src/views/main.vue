@@ -79,7 +79,6 @@
 			let res ={data:{"ret":0,"positions":["111","广告位3","广告位4"],"data":[{"name":"阳泉市","data":[1,10,0]},{"name":"上海市","data":[1,8,0]},{"name":"济南市","data":[1,9,0]},{"name":"青岛市","data":[1,1,11]}]}};
             // this.$api.onOrderClicks(oid).then(res => {
               if (res.data.ret === 0) {
-                console.log(res)
                 this.option.yAxis.data = res.data.positions;
                 this.option.legend.data = res.data.data.map(item=>item.name )
                 this.option.series = res.data.data.map(item=>{
@@ -96,7 +95,6 @@
                       	data: item.data
                     }
 				})
-				console.log(this.option)
 
                 this.setEchart();
               }
@@ -120,7 +118,6 @@
         for(let i=1;i<=month_id;i++){
           this.options.push({value:i,label:year+"年"+i+'月'})
         }
-        console.log(this.options)
       },
       mounted() {
         this.onOrderClicks(this.$route.query.id)

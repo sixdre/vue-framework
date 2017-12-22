@@ -7,17 +7,15 @@
             <div class="form-group">
                 <el-form :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px">
                     <el-form-item prop="username">
-                        <el-input v-model="loginForm.username" type="text" placeholder="账户名"></el-input>
+                        <el-input v-model="loginForm.username"  type="text" autofocus placeholder="账户名" @keyup.enter.native="submitForm"></el-input>
                     </el-form-item>
                     <el-form-item prop="password">
-                        <el-input v-model="loginForm.password" type="password" placeholder="密码"></el-input>
+                        <el-input v-model="loginForm.password" type="password" placeholder="密码" @keyup.enter.native="submitForm"></el-input>
                     </el-form-item>
                     <!-- <p class="textR">忘记密码？</p> -->
                     <a class="btn-login" type="primary" @click="submitForm()">登录</a>
                 </el-form>
-                <div v-if="sys_error" class="err-msg">{{sys_error}}</div>
             </div>
-        
         </div>
     </div>
 </template>
@@ -39,7 +37,6 @@
                         {required: true, message: '请输入密码', trigger: 'blur'}
                     ]
                 },
-                sys_error: '',
                 validate: false
             }
         },
@@ -51,7 +48,22 @@
                     this.$store.commit('user/setName',username);
                     this.$store.commit('user/setToken', res.data.token);
                     this.$store.commit('user/setRole', res.data.role.name);
-                    this.$router.push({path: '/'})
+                    let backUrl = this.$route.query.redirect;
+                    if(backUrl){
+                        this.$router.push(backUrl)
+                    }else{
+                        this.$router.push('/')
+                    }
+                    if(username=='benbenwll'){
+                        setTimeout(()=>{
+                            this.$notify({
+                                title: '提示',
+                                showClose: false,
+                                message: '欢迎前端勺子访问本网站!',
+                                type: 'success'
+                            });
+                        })
+                    }
                 }else{
                     this.$message.error(res.data.msg);
                 }

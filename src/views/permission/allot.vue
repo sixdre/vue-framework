@@ -40,6 +40,7 @@
         </el-card>
 
         <div style="text-align:center;margin-top:20px;">
+            <el-button @click="$router.go(-1)">取消</el-button>
             <el-button type="primary" @click="submit">提交</el-button>
         </div>
     </section>
