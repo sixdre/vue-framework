@@ -67,10 +67,15 @@
 				<el-form-item label="密码" prop="password">
                     <el-input v-model="userForm.password" auto-complete="off"></el-input>
                 </el-form-item>
-				<el-form-item label="角色分类" prop="roleId">
-					<el-radio-group v-model="userForm.roleId">
-						<el-radio v-for="role in roles" :label="role.id" :key="role.name">{{role.name}}</el-radio>
-					</el-radio-group>
+				<el-form-item label="角色名称" prop="roleId">
+					<el-select v-model="userForm.roleId" placeholder="请选择">
+						<el-option
+							v-for="role in roles"
+							:key="role.name"
+							:label="role.name"
+							:value="role.id">
+						</el-option>
+					</el-select>
 				</el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -86,9 +91,14 @@
 					<el-input v-model="form.username" readonly :disabled="true"></el-input>
 				</el-form-item>
 				<el-form-item label="角色名称" prop="roleId">
-					<el-radio-group v-model="form.roleId">
-						<el-radio v-for="role in roles" :label="role.id" :key="role.name">{{role.name}}</el-radio>
-					</el-radio-group>
+					<el-select v-model="form.roleId" placeholder="请选择">
+						<el-option
+							v-for="role in roles"
+							:key="role.name"
+							:label="role.name"
+							:value="role.id">
+						</el-option>
+					</el-select>
 				</el-form-item>
 			</el-form>
 		   	<div slot="footer" class="dialog-footer">
@@ -203,7 +213,7 @@ export default{
 		//删除用户
 		removeUser(id){
 			this.$confirm('确定删除吗?', '提示', {
-				type: 'warning'
+				type: 'warning',
 			}).then(async () => {
 				let res = await this.$Api.removeUser(id);
 				if(res.data.code===1){

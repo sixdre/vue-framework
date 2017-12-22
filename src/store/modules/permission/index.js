@@ -4,7 +4,9 @@ import Auth from '@/services/auth'
 
 const state = {
     // 完整权限列表（菜单列表）
-    list: []
+    list: [],
+    // 权限列表（后台可请求的API）
+    resources:[]
 }
 
 const getters = {}
@@ -12,6 +14,9 @@ const getters = {}
 const mutations = {
     setList: (state, data) => {
         state.list = data
+    },
+    setResources:(state, data) => {
+        state.resources = data
     }
 }
 

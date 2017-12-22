@@ -43,7 +43,12 @@ axios.interceptors.response.use(
 				case 403:
 					Message.error('抱歉，您没有权限访问,请与系统管理员联系!')
 					break;
+				default:
+					Message.error('请求失败，服务器错误!')
+					break;
 			}
+			
+
 		}
 		return Promise.reject(error)
 	}

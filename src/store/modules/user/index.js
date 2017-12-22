@@ -42,6 +42,7 @@ const actions = {
             commit('setToken', '')
             commit('setRole', '')
             commit('setName', '')
+            commit('permission/setResources', [], { root: true });
             commit('permission/setList', [], { root: true })    // 调用permission模块的 mutations
             resolve()
         })
@@ -52,6 +53,7 @@ const actions = {
             Api.getUserInfo().then((res) => {
                 // 存储权限列表
                 commit('permission/setList', res.data.menuList, { root: true });
+                commit('permission/setResources', res.data.permissions, { root: true });
                 resolve(res.data.menuList)
             }).catch(() => {
                 reject()
