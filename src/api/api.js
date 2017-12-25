@@ -15,6 +15,14 @@ export default {
     createPermission(data) {
         return $http.post('/api/permission/createPermission', data);
     },
+    //创建菜单
+    createMenu(data) {
+        return $http.post('/api/permission/createMenu', data);
+    },
+    //删除菜单
+    removeMenu(id) {
+        return $http.delete('/api/permission/menus/'+id);
+    },
     //获取权限列表
     getPermissionList({page=1,limit=5,group=0}) {
         return $http.get('/api/permission/getPermission',{params:{page,limit,group}});
