@@ -23,6 +23,10 @@ export default {
     removeMenu(id) {
         return $http.delete('/api/permission/menus/'+id);
     },
+     //更新菜单
+    updateMenu(data) {
+        return $http.post('/api/permission/updateMenu',data);
+    },
     //获取权限列表
     getPermissionList({page=1,limit=5,group=0}) {
         return $http.get('/api/permission/getPermission',{params:{page,limit,group}});

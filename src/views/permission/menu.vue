@@ -23,15 +23,25 @@
 		<el-dialog :visible.sync="addFormVisible" :close-on-click-modal="false">
 			<el-form :model="form" :rules="rules" label-width="80px"  ref="form">
 				<el-form-item label="菜单名称" prop="name" required>
-					<el-input v-model="form.name" auto-complete="off"></el-input>
+					<el-input v-model="form.name" ></el-input>
 				</el-form-item>
 				<el-form-item label="菜单地址" prop="path" required>
-					<el-input v-model="form.path" auto-complete="off"></el-input>
+					<el-input v-model="form.path" ></el-input>
+				</el-form-item>
+                <el-form-item label="菜单图标" prop="icon">
+					<el-input v-model="form.icon" ></el-input>
+				</el-form-item>
+                  <el-form-item label="是否隐藏" prop="hidden">
+					<el-radio-group v-model="form.hidden">
+                        <el-radio :label="false">否</el-radio>
+                        <el-radio :label="true">是</el-radio>
+                    </el-radio-group>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click.native="addFormVisible = false">取消</el-button>
-				<el-button type="primary" @click.native="createMenu">提交</el-button>
+				<el-button type="primary" v-if="isEdit" @click.native="updateMenu">更新</el-button>
+                <el-button type="primary" v-else @click.native="createMenu">提交</el-button>
 			</div>
 		</el-dialog> 
 
@@ -46,10 +56,13 @@ export default{
             form:{
                 name:'',
                 path:'',
-                pid:0
+                pid:0,
+                icon:'',
+                hidden:0
 			},
             menuList:[],
             addFormVisible:false,
+            isEdit:false,
             defaultProps: {
                 children: 'child',
                 label: 'name'
@@ -74,18 +87,51 @@ export default{
             this.menuList = res.data.data;
         },
         handleAddDialog(){
+            this.isEdit = false;
 			this.addFormVisible = true;
 			this.form={
 				name:'',
                 path:'',
-                pid:0
+                pid:0,
+                icon:'',
+                hidden:false
 			}
-		},
+        },
+        handleEditDialog(data){
+            this.isEdit = true;
+            this.addFormVisible = true;
+            this.form.id = data.id;
+            this.form.name=data.name;
+            this.form.path=data.path;
+            this.form.icon=data.icon;
+            this.form.hidden=data.hidden;
+        },
         //创建菜单
-        async createMenu(){
+        createMenu(){
             this.$refs['form'].validate(async (valid) => {
 				if (valid) {
 					let res = await this.$Api.createMenu(this.form)
+                    if(res.data.code==1){
+                        this.$message({
+                            showClose: true,
+                            message: res.data.msg,
+                            type: 'success'
+                        });
+                        this.addFormVisible=false;
+                        this.getMenus();
+                    }else{
+                        this.$message.error(res.data.msg);
+                    }
+				} else {
+					return false;
+				}
+			})
+        },
+        //更新菜单
+        updateMenu(){
+            this.$refs['form'].validate(async (valid) => {
+				if (valid) {
+					let res = await this.$Api.updateMenu(this.form)
                     if(res.data.code==1){
                         this.$message({
                             showClose: true,
@@ -126,6 +172,11 @@ export default{
                             this.form.pid = data.id;
                         }
                     }},'添加'),
+                    h('el-button',{attrs:{type:"text",style:'font-size:12px;padding:0 20px;'},on:{
+                        click:($event)=>{
+                            this.handleEditDialog(data)
+                        }
+                    }},'编辑'),
                     h('el-button',{attrs:{type:"text",style:'font-size:12px;padding:0 20px;'},on:{
                         click:($event)=>{
                             this.$confirm('确定删除吗?', '提示', {
