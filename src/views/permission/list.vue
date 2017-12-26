@@ -75,7 +75,9 @@
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click.native="addFormVisible = false">取消</el-button>
-				<el-button type="primary" @click.native="addSubmit">提交</el-button>
+				<el-button type="primary" v-if="isEdit" @click.native="addSubmit('update')">更新</el-button>
+				<el-button type="primary" v-else @click.native="addSubmit('add')">提交</el-button>
+				
 			</div>
 		</el-dialog> 
 
@@ -101,6 +103,7 @@ export default{
             addFormVisible:false,
 			permissionList:[],
 			menuList:[],
+			isEdit:false,
 			rules: {
 				name: [
 					{ required: true, message: '请输入权限名称', trigger: 'blur' }
@@ -123,6 +126,7 @@ export default{
 	},
 	methods:{
         handleAddDialog(){
+			this.isEdit = false;
 			this.addFormVisible = true;
 			this.form={
 				name:'',
@@ -132,6 +136,7 @@ export default{
 			}
 		},
 		handleEditDialog(row){
+			this.isEdit = true;
 			this.form.id = row.id;
 			this.form.name = row.name;
 			this.form.resource = row.resource;
@@ -160,24 +165,25 @@ export default{
 
             }
         },
-		addSubmit(){
+		addSubmit(type){
 			this.$refs['form'].validate(async (valid) => {
 				if (valid) {
-					try{
-						let res = await this.$Api.createPermission(this.form);
-						if(res.data.code===1){
-							this.$message({
-								showClose: true,
-								message: res.data.msg,
-								type: 'success'
-							});
-							this.addFormVisible=false;
-							this.getPermissionList();
-						}else{
-							this.$message.error(res.data.msg);
-						}
-					}catch(err){
-
+					let res;
+					if(type=='add'){		
+						res = await this.$Api.createPermission(this.form);
+					}else {
+						res = await this.$Api.updatePermission(this.form);
+					}
+					if(res.data.code===1){
+						this.$message({
+							showClose: true,
+							message: res.data.msg,
+							type: 'success'
+						});
+						this.addFormVisible=false;
+						this.getPermissionList();
+					}else{
+						this.$message.error(res.data.msg);
 					}
 				} else {
 					return false;

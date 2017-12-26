@@ -15,6 +15,10 @@ export default {
     createPermission(data) {
         return $http.post('/api/permission/createPermission', data);
     },
+    //更新权限
+    updatePermission(data) {
+        return $http.post('/api/permission/updatePermission', data);
+    },
     //创建菜单
     createMenu(data) {
         return $http.post('/api/permission/createMenu', data);
@@ -23,7 +27,7 @@ export default {
     removeMenu(id) {
         return $http.delete('/api/permission/menus/'+id);
     },
-     //更新菜单
+    //更新菜单
     updateMenu(data) {
         return $http.post('/api/permission/updateMenu',data);
     },

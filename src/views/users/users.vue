@@ -158,13 +158,14 @@ export default{
 	},
 	created(){
 		this.getUsers();
-		this.getRoles();
 	},
 	methods:{
 		handleAddUserDialog(){
+			this.getRoles();
 			this.addFormVisible = true;
 		},
 		handleRoleDialog(row){
+			this.getRoles();
 			this.form.username=row.username;
 			this.form.userId=row.id;
 			this.form.roleId=row.roleId;
@@ -189,6 +190,9 @@ export default{
         },
         //获取所有的角色
         async getRoles(){
+			if(this.roles.length>0){
+				return ;
+			}
             let res = await this.$Api.getRoles();
             if(res.data.code===1){
                 this.roles = res.data.data;
