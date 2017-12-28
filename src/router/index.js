@@ -5,8 +5,6 @@ import 'nprogress/nprogress.css'
 import store from '@/store'
 import Auth from '@/services/auth'
 import asyncRouter from './asyncRouter'
-
-
 NProgress.configure({ showSpinner: true });
 
 Vue.use(Router)
@@ -17,45 +15,11 @@ const whiteList = [
     '/register'
 ]
 
-/**
- * 根据权限匹配路由
- * @param {array} permission 权限列表（菜单列表）
- * @param {array} asyncRouter 异步路由对象
- */
-function routerMatch(permission, asyncRouter) {
-    return new Promise((resolve) => {
-        const routers = asyncRouter[0]
-        function createRouter(permission) {
-            permission.forEach((item) => {
-                if (item.child && item.child.length) {
-                    createRouter(item.child)
-                }
-                let path = item.path
-                // 循环异步路由，将符合权限列表的路由加入到routers中
-                asyncRouter.find(function(s) {
-                    if (s.path == path) {
-                        s.meta.permission = item.permission
-                        routers.children.push(s)
-                        return;
-                    }
-                })
-            })
-        }
-        if (!permission || !permission.length) {
-            resolve([]);
-            return;
-        }
-        createRouter(permission)
-        resolve([routers])
-    })
-}
-
-
 //初始化的路由
 var routes = [{
     path: '/',
     name: 'index',
-     redirect: '/welcome',
+    redirect: '/welcome',
     component: r => require.ensure([], () => r(require('@/layouts/layout'))),
     children: [
         {
@@ -78,6 +42,13 @@ var routes = [{
     component: r => require.ensure([], () => r(require('@/views/auth/403')))
 }]
 
+ //这个用作动态路由的父页
+const baseAsyncRouter = {
+    path: '/asyncRouter',   
+    redirect: '/404',
+    component: r => require.ensure([], () => r(require('@/layouts/layout')), 'layout'),
+    children: []
+}
 
 
 const router = new Router({
@@ -86,6 +57,39 @@ const router = new Router({
 })
 
 
+
+/**
+ * 根据权限匹配路由
+ * @param {array} permission 权限列表（菜单列表）
+ * @param {array} routeList 异步路由对象数组
+ */
+function routerMatch(permission, routeList) {
+    return new Promise((resolve) => {
+        if (!permission.length||!Array.isArray(permission)) {
+            resolve([])
+            return
+        }
+        let routers = [];
+        function createRouter(permission) {
+            permission.forEach((item) => {
+                if (item.child && item.child.length) {
+                    createRouter(item.child)
+                }
+                let path = item.path
+                // 循环异步路由，将符合权限列表的路由加入到routers中
+                routeList.find(function(s) {
+                    if (s.path == path) {
+                        s.meta.permission = item.permission
+                        routers.push(s)
+                        return;
+                    }
+                })
+            })
+        }
+        createRouter(permission)
+        resolve(routers)
+    })
+}
 
 
 router.beforeEach((to, from, next) => {
@@ -98,12 +102,9 @@ router.beforeEach((to, from, next) => {
                 store.dispatch('user/getUserInfo').then(res => {
                     // 匹配并生成需要添加的路由对象
                     routerMatch(res, asyncRouter).then(data => {
-                        if (!data || !data.length) {
-                            next()
-                        } else {
-                            router.addRoutes(data)
-                            next({ ...to}) 
-                        }
+                        baseAsyncRouter.children = data;
+                        router.addRoutes([baseAsyncRouter]);
+                        next({ ...to}) 
                     })
                 }).catch(() => {
                     // console.log('登录错误')
