@@ -1,53 +1,89 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import asyncRouter from './asyncRouter'	
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+import $config from '@/config/env'
+import Auth from '@/services/auth'
 
-import asyncRouter from './asyncRouter'
-	
-import emptyPage from '@/layouts/empty'
-import layout from '@/layouts/layout'
-
-import index from '@/views/main'
-import article from '@/views/article/publish'
-import articleList from '@/views/article/list'
-import login from '@/views/login'
+NProgress.configure({ showSpinner: true });
 Vue.use(Router)
 
-// {
-// 	path: '/article',
-// 	name: 'article',
-// 	redirect: '/article/publish',
-// 	component: layout,
-// 	children: [
-// 		{
-// 			path: 'publish',
-// 			name: '发布文章',
-// 			component: article,
-// 		},
-// 		{
-// 			path: 'list',
-// 			name: '文章列表',
-// 			component: articleList,
-// 		},
-// 	]
-// }
-
+//路由白名单（用于不需要验证的路由）
+const whiteList = [
+    '/login',
+    '/403'
+]
 
 var routes = [{
 	path: '/',
-	name: 'index',
-	redirect: '/article/publish',
-	component: index
+    name: 'index',
+    children: [{
+        path: '/',
+        name: 'index',
+        meta: {
+            title:'首页',
+        },
+        component: r => require.ensure([], () => r(require('@/views/main'))),
+    }],
+	component: r => require.ensure([], () => r(require('@/layouts/layout'))),
 },{
 	path: '/login',
-	name: 'login',
-	component: login,
+    name: 'login',
+    component: r => require.ensure([], () => r(require('@/views/login')))
+},{
+    path: '/404',
+    name: 'notFound',
+    component: r => require.ensure([], () => r(require('@/views/auth/404')))
+}, {
+    path: '/403',
+    name: 'forbidden',
+    component: r => require.ensure([], () => r(require('@/views/auth/403')))
 }]
 
-routes.push(...asyncRouter)
+var baseAsyncRouter = {
+    path: '/asyncRouter',
+    redirect: '/404',
+    component: r => require.ensure([], () => r(require('@/layouts/layout'))),
+    children: []
+}
 
-console.log(routes)
+baseAsyncRouter.children = [...asyncRouter]
+routes.push(baseAsyncRouter)
 
-export default new Router({
+const router = new Router({
 	linkActiveClass: 'active',
-    routes: routes
+    routes: routes,
+    mode: $config.routerMode,
 })
+
+
+router.beforeEach((to, from, next) => {
+    NProgress.start();
+    if (Auth.authenticated()) {
+        if (to.path === '/login') { //已登录不可以再次回到登录页面，再次登录需要先退出系统
+            router.replace('/')
+        } else {
+            if (to.matched.length) {
+                next()
+            } else {
+                router.replace('/404')
+            }
+        }
+    } else {
+        if (whiteList.indexOf(to.path) >= 0) {
+            next()
+        } else {
+            router.replace('/login')
+            NProgress.done()
+        }
+    }
+    next()
+
+})
+
+router.afterEach(() => {
+    NProgress.done();
+})
+
+export default router

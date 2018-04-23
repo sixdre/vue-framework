@@ -4,10 +4,11 @@
       <header-component></header-component>
     </el-header>
     <el-container>
-      <el-aside width="202px">
+      <el-aside class="app-aside">
         <aside-component></aside-component>
       </el-aside>
       <el-main>
+        <breadcrumb class="breadcrumb-container"></breadcrumb>
         <router-view></router-view>
       </el-main>
     </el-container>
@@ -17,10 +18,12 @@
 <script>
 import headerComponent from '@/components/header/header'
 import asideComponent from '@/components/aside/aside'
+import breadcrumb from '@/components/breadcrumb'
 export default {
   components: {
     headerComponent,
-    asideComponent
+    asideComponent,
+    breadcrumb
   },
 
 
@@ -38,5 +41,8 @@ export default {
   background-color: #fff;
   color: #333;
   padding: 10px;
+}
+.app-aside{
+  max-width: 202px !important;
 }
 </style>

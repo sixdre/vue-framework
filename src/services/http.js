@@ -1,6 +1,7 @@
 import axios from 'axios'
 import $config from '@/config/env'
-import $user from './auth'
+import store from '@/store'
+import router from '@/router'
 
 // axios 配置
 axios.defaults.timeout = 5000
@@ -21,7 +22,12 @@ axios.interceptors.response.use(
 		return response
 	},
 	error => {
-		if(error.response) {
+		if (error.response) {
+			// store.dispatch('user/logout').then(() => {
+            //     router.replace({
+            //         path: '/login'
+            //     })
+            // })
 			//    switch (error.response.status) {
 			//      case 401:
 			//        // 401 清除token信息并跳转到登录页面

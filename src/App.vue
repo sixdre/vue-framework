@@ -11,7 +11,7 @@
 </script>
 
 <style lang="less">
-	@import './style/common';
+	@import './assets/css/common';
 
 	#app {
 		position: relative;
